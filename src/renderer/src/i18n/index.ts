@@ -12,7 +12,7 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { DEFAULT_GOD_NAME } from '../../../shared/godIdentity';
-import en from './locales/en.json';
+import strings from '../strings.json';
 
 /**
  * Registered languages. Add entries here when adding new locale files.
@@ -69,7 +69,7 @@ void i18n
   .use(initReactI18next)
   .init({
     resources: {
-      en: { translation: en }
+      en: { translation: strings }
     },
     lng: detectLanguage(),
     fallbackLng: 'en',
