@@ -11,7 +11,7 @@
  */
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import { DEFAULT_GOD_NAME } from '@shared/godIdentity';
+import { DEFAULT_GOD_NAME } from '../../../shared/godIdentity';
 import en from './locales/en.json';
 
 /**

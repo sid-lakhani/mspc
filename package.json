@@ -13,9 +13,9 @@
   "scripts": {
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "dev:server": "tsx watch src/server/index.ts",
-    "dev:client": "vite src/renderer",
+    "dev:client": "vite",
     "build": "npm run build:client && npm run build:server",
-    "build:client": "vite build src/renderer",
+    "build:client": "vite build",
     "build:server": "tsc -p tsconfig.server.json",
     "typecheck": "npm run typecheck:server && npm run typecheck:client",
     "typecheck:server": "tsc --noEmit -p tsconfig.server.json",
@@ -42,7 +42,7 @@
     "@xterm/addon-unicode11": "^0.9.0",
     "@xterm/addon-webgl": "^0.19.0",
     "@xterm/xterm": "^5.5.0",
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.3",
     "better-sqlite3": "^11.10.0",
     "commit-graph": "^2.4.0",
     "cookie-parser": "^1.4.7",
@@ -63,6 +63,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/bcryptjs": "^2.4.6",
     "@types/better-sqlite3": "^7.6.13",
     "@types/cookie-parser": "^1.4.8",
     "@types/cors": "^2.8.17",
@@ -76,6 +77,13 @@
     "concurrently": "^9.0.0",
     "tsx": "^4.19.2",
     "typescript": "^5.6.3",
-    "vite": "^5.4.8"
+    "vite": "^5.4.8",
+    "vite-tsconfig-paths": "^6.1.1"
+  },
+  "allowScripts": {
+    "better-sqlite3": true,
+    "node-pty": true,
+    "esbuild": true,
+    "bcrypt": true
   }
 }

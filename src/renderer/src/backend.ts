@@ -11,8 +11,18 @@ export async function callBackend(channel: string, ...args: any[]): Promise<any>
 }
 
 export function callBackendSync(channel: string, ...args: any[]): any {
-  // Synchronous fetch is not supported in browsers natively without blocking workers or XHR.
-  // Stub for now.
+  const path = channel.replace(/:/g, '/');
+  const request = new XMLHttpRequest();
+  request.open('POST', `/api/${path}`, false); // `false` makes the request synchronous
+  request.setRequestHeader('Content-Type', 'application/json');
+  try {
+    request.send(JSON.stringify({ args }));
+    if (request.status === 200) {
+      return JSON.parse(request.responseText);
+    }
+  } catch (err) {
+    console.error(`Sync backend call failed: ${channel}`, err);
+  }
   return null;
 }
 

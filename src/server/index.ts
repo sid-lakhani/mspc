@@ -34,16 +34,13 @@ import { WebSocketServer, type WebSocket } from 'ws';
 
 import { MSPC_DATA_DIR } from './routes/config';
 import { readConfig, writeConfig } from '../main/config';
-import { createAgentRouter } from './routes/agents';
-import { createHiveRouter } from './routes/hive';
-import { createGitRouter } from './routes/git';
-import { createFsRouter } from './routes/filesystem';
 import { createConfigRouter } from './routes/config';
 import { createAuthRouter } from './routes/auth';
-import { createToolsRouter } from './routes/tools';
 import { setupWebSocketHandlers } from './ws/handlers';
+import { createRpcRouter } from './rpc';
+import { initCore } from '../main/index';
 
-const PORT = parseInt(process.env.MSPC_PORT ?? '3000', 10);
+const PORT = parseInt(process.env.MSPC_PORT ?? '4000', 10);
 const IS_DEV = process.env.NODE_ENV !== 'production';
 
 // ─── Ensure data directory ────────────────────────────────────────────────────
@@ -76,7 +73,7 @@ app.set('trust proxy', 1);
 // CORS — dev only, tightened in production
 if (IS_DEV) {
   app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:3000'],
+    origin: ['http://localhost:3000', 'http://localhost:4000'],
     credentials: true
   }));
 }
@@ -113,12 +110,7 @@ function requireAuth(req: Request, res: Response, next: NextFunction): void {
 app.use('/api/auth', createAuthRouter());
 
 // All other API routes require authentication
-app.use('/api/config',  requireAuth, createConfigRouter());
-app.use('/api/agents',  requireAuth, createAgentRouter());
-app.use('/api/hive',    requireAuth, createHiveRouter());
-app.use('/api/git',     requireAuth, createGitRouter());
-app.use('/api/fs',      requireAuth, createFsRouter());
-app.use('/api/tools',   requireAuth, createToolsRouter());
+app.use('/api', requireAuth, createRpcRouter());
 
 // Health check (public)
 app.get('/health', (_req, res) => {
@@ -179,6 +171,9 @@ process.on('SIGINT', () => {
 });
 
 // ─── Start ────────────────────────────────────────────────────────────────────
+
+// Initialize the core logic migrated from Electron main process
+initCore();
 
 httpServer.listen(PORT, () => {
   const publicUrl = process.env.MSPC_PUBLIC_URL ?? `http://localhost:${PORT}`;

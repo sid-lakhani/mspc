@@ -16,7 +16,7 @@
 import { Router, type Request, type Response } from 'express';
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { MSPC_DATA_DIR } from './config';
 
 const AUTH_FILE = join(MSPC_DATA_DIR, 'auth.json');
