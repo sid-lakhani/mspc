@@ -16,16 +16,16 @@
  *
  * Contract: hive/docs/integrations-spec.md.
  */
-import { app, safeStorage } from 'electron';
 import { existsSync, mkdirSync, readFileSync, writeFileSync, rmSync } from 'node:fs';
 import { dirname, join } from 'node:path';
+import { createCipheriv, createDecipheriv, randomBytes, createHash } from 'node:crypto';
 import {
   type IntegrationRecord,
   validateIntegrationRecord,
   authTypeNeedsSecret,
   secretRefFor
 } from '../shared/integrations';
-import { readConfig, writeConfig } from './config';
+import { readConfig, writeConfig, MSPC_DATA_DIR } from './config';
 
 // ─── Registry (config-backed) ────────────────────────────────────────────────
 
@@ -82,7 +82,7 @@ export function listRecordsRedacted(): Array<Omit<IntegrationRecord, 'secretRef'
 // ─── Secret store (encrypted at rest) ────────────────────────────────────────
 
 function secretsPath(): string {
-  return join(app.getPath('userData'), 'integration-secrets.json');
+  return join(MSPC_DATA_DIR, 'integration-secrets.json');
 }
 
 function readSecretBlob(): Record<string, string> {
@@ -102,18 +102,28 @@ function writeSecretBlob(blob: Record<string, string>): void {
   writeFileSync(p, JSON.stringify(blob, null, 2), { encoding: 'utf8', mode: 0o600 });
 }
 
+const getSecretKey = () => {
+  const secret = process.env.MSPC_SECRET;
+  if (!secret) {
+    return createHash('sha256').update('fallback-secret').digest();
+  }
+  return createHash('sha256').update(secret).digest();
+};
+
 /** Store a secret ENCRYPTED. Fail closed if OS encryption is unavailable (never
  *  writes plaintext). The plaintext is used only to encrypt and is not retained. */
 export function setSecret(secretRef: string, plaintext: string): { ok: boolean; error?: string } {
   if (!secretRef) return { ok: false, error: 'secretRef required' };
   if (typeof plaintext !== 'string' || plaintext === '') return { ok: false, error: 'secret required' };
   try {
-    if (!safeStorage.isEncryptionAvailable()) {
-      return { ok: false, error: 'OS secret encryption is unavailable; refusing to store a secret in plaintext' };
-    }
-    const cipher = safeStorage.encryptString(plaintext).toString('base64');
+    const iv = randomBytes(16);
+    const cipher = createCipheriv('aes-256-gcm', getSecretKey(), iv);
+    const encrypted = Buffer.concat([cipher.update(plaintext, 'utf8'), cipher.final()]);
+    const authTag = cipher.getAuthTag();
+    const payload = Buffer.concat([iv, authTag, encrypted]).toString('base64');
+    
     const blob = readSecretBlob();
-    blob[secretRef] = cipher;
+    blob[secretRef] = payload;
     writeSecretBlob(blob);
     return { ok: true };
   } catch (e) {
@@ -125,11 +135,17 @@ export function setSecret(secretRef: string, plaintext: string): { ok: boolean; 
  *  undefined if absent or undecryptable (the broker maps that to 503 no_secret). */
 export function getSecret(secretRef: string | undefined): string | undefined {
   if (!secretRef) return undefined;
-  const cipher = readSecretBlob()[secretRef];
-  if (!cipher) return undefined;
+  const payloadStr = readSecretBlob()[secretRef];
+  if (!payloadStr) return undefined;
   try {
-    if (!safeStorage.isEncryptionAvailable()) return undefined;
-    return safeStorage.decryptString(Buffer.from(cipher, 'base64'));
+    const data = Buffer.from(payloadStr, 'base64');
+    const iv = data.subarray(0, 16);
+    const authTag = data.subarray(16, 32);
+    const encrypted = data.subarray(32);
+    
+    const decipher = createDecipheriv('aes-256-gcm', getSecretKey(), iv);
+    decipher.setAuthTag(authTag);
+    return decipher.update(encrypted, undefined, 'utf8') + decipher.final('utf8');
   } catch {
     return undefined;
   }

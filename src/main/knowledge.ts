@@ -9,10 +9,9 @@
  * MemoryManager surface (`active()` / `env()` / `status()`) so it slots into the
  * existing spawn-injection flow.
  */
-import { app } from 'electron';
 import { existsSync } from 'node:fs';
-import { join } from 'node:path';
-import { readConfig } from './config';
+import { join, resolve } from 'node:path';
+import { readConfig, MSPC_DATA_DIR } from './config';
 
 // Pure-JS core, copied to out/main at build (like slack-trigger.cjs) and shipped
 // to process.resourcesPath for the agent CLI (electron-builder extraResources).
@@ -59,21 +58,17 @@ export class KnowledgeManager {
   root(): string {
     const override = readConfig().knowledgeGraph?.rootPath;
     if (override && override.trim()) return override;
-    return join(app.getPath('userData'), 'knowledge');
+    return join(MSPC_DATA_DIR, 'knowledge');
   }
 
-  /** Absolute path to the agent CLI (dev: repo resources/; packaged: resourcesPath). */
+  /** Absolute path to the agent CLI. */
   private cliPath(): string {
-    return app.isPackaged
-      ? join(process.resourcesPath, 'kg.cjs')
-      : join(app.getAppPath(), 'resources', 'kg.cjs');
+    return resolve(__dirname, '../../resources/kg.cjs');
   }
 
   /** Absolute path to the pure-JS core for the out-of-process CLI to require. */
   private corePath(): string {
-    return app.isPackaged
-      ? join(process.resourcesPath, 'kg-core.cjs')
-      : join(app.getAppPath(), 'src', 'main', 'kg-core.cjs');
+    return resolve(__dirname, 'kg-core.cjs');
   }
 
   /** Env merged into each agent's spawn so its `kg` CLI hits this store. Empty

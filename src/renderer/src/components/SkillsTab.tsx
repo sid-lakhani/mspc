@@ -12,7 +12,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PixelButton } from './PixelButton';
-import type { LocalSkill, CatalogSkill } from '../../../preload';
+import type { LocalSkill, CatalogSkill } from '@/api';
 
 type Mode = 'installed' | 'browse';
 

@@ -13,7 +13,7 @@ import { ideBarStyle, ideIconBtn as iconBtn, ideTextBtn as textBtn } from './chr
 
 // v0.3.4 markdown preview: per-md-tab view mode, defaulted from the last choice.
 type MdView = 'code' | 'split' | 'preview';
-const LS_MD_VIEW = 'cth.ide.mdView';
+const LS_MD_VIEW = 'mspc.ide.mdView';
 const isMarkdown = (rel: string) => /\.(md|markdown)$/i.test(rel);
 function defaultMdView(): MdView {
   try {
@@ -24,7 +24,7 @@ function defaultMdView(): MdView {
 }
 
 /** Remembers the git rail collapse across IDE opens and app restarts. */
-const GIT_RAIL_COLLAPSED_KEY = 'cth.ide.gitRailCollapsed';
+const GIT_RAIL_COLLAPSED_KEY = 'mspc.ide.gitRailCollapsed';
 
 // ─── Local mirrors of the main-side git shapes (kept renderer-local like GitTab) ──
 interface GitStatusEntry { path: string; index: string; worktree: string }

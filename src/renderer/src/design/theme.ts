@@ -15,9 +15,9 @@ import { useSyncExternalStore } from 'react';
 
 export type AppTheme = 'light' | 'dark';
 
-const LS_KEY = 'cth.theme';
+const LS_KEY = 'mspc.theme';
 /** Pre-0.3.4 the terminal had its own theme key — honor it once as the seed. */
-const LEGACY_LS_KEY = 'cth.ptyTheme';
+const LEGACY_LS_KEY = 'mspc.ptyTheme';
 
 function load(): AppTheme {
   try {

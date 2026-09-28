@@ -13,7 +13,7 @@ export interface HivePickerProps {
 // Set right before a hive SWITCH so App skips this picker once after the relaunch
 // changeHome triggers — otherwise the user would land back on the picker for the
 // hive they just chose. App.tsx reads + clears it on mount.
-const SKIP_KEY = 'cth.skipHivePickerOnce';
+const SKIP_KEY = 'mspc.skipHivePickerOnce';
 
 function folderName(path: string): string {
   return path.split('/').filter(Boolean).pop() ?? path;

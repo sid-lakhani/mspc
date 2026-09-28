@@ -13,7 +13,15 @@ import type {
   OrgTriggerConfig,
   WebhookTrigger
 } from '@shared/triggers';
-import { isNewer } from '@shared/updateState';
+function isNewer(target: string, current: string): boolean {
+  const t = target.replace(/-rc.*/, '').split('.').map(Number);
+  const c = current.replace(/-rc.*/, '').split('.').map(Number);
+  for (let i = 0; i < 3; i++) {
+    if ((t[i] || 0) > (c[i] || 0)) return true;
+    if ((t[i] || 0) < (c[i] || 0)) return false;
+  }
+  return false;
+}
 import modelCatalog from '@shared/modelCatalog.json';
 import type { CatalogModel, ModelCatalog } from '@shared/modelCatalogPayload';
 

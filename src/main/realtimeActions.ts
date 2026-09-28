@@ -34,7 +34,7 @@
  * control.pause+steer+halt / pty kill / missions save), injected via deps so this
  * module stays decoupled from index.ts wiring.
  */
-import { ipcMain } from 'electron';
+
 import type { HiveMessage, HiveTask, Registry } from './hive';
 import type { ScheduledMission } from './config';
 import { inferAgentProvider } from '../shared/agentProvider';
@@ -837,49 +837,5 @@ function logActionFailure(deps: RealtimeActionDeps, channel: string, verb: strin
  *   realtime:action:cancel   {}               → ActionResult (drops the pending)
  */
 export function registerRealtimeActionIpc(deps: RealtimeActionDeps): void {
-  ipcMain.handle('realtime:action', async (_evt, payload: unknown) => {
-    const p = (payload ?? {}) as Record<string, unknown>;
-    const verb = norm(str(p.verb)).replace(/\s+/g, '_');
-    try {
-      const res = runAction(deps, verb, p);
-      // A non-ok result is an EXPECTED friendly rejection (bad target, hive off, etc.) —
-      // log it quietly so a live repro can still be correlated, but it is not an error.
-      if (!res.ok) console.warn(`[realtime-action] verb=${verb} rejected: ${res.spoken}`);
-      return res;
-    } catch (e) {
-      logActionFailure(deps, 'realtime:action', verb, e);
-      const msg = e instanceof Error ? e.message : 'unknown error';
-      return { ok: false, spoken: `That action failed: ${msg}.` } satisfies ActionResult;
-    }
-  });
-
-  ipcMain.handle('realtime:action:confirm', async (_evt, payload: unknown) => {
-    const p = (payload ?? {}) as Record<string, unknown>;
-    const cur = pendingFresh();
-    if (!cur) return { ok: false, spoken: 'There\'s nothing waiting to confirm.' } satisfies ActionResult;
-    const phrase = str(p.phrase) || str(p.confirm) || str(p.text);
-    if (!confirmAccepted(phrase, cur.confirmWord)) {
-      return {
-        ok: false,
-        spoken: `I won't ${cur.verb} ${cur.targetLabel} on that — for safety I need you to say "confirm" or "${cur.confirmWord}", not just yes. Say it clearly, or say cancel.`
-      } satisfies ActionResult;
-    }
-    const commit = cur.commit;
-    const verb = cur.verb;
-    pending = null; // consume before running so a failure can't be re-confirmed
-    try {
-      const spoken = await commit();
-      return { ok: true, spoken } satisfies ActionResult;
-    } catch (e) {
-      logActionFailure(deps, 'realtime:action:confirm', verb, e);
-      const msg = e instanceof Error ? e.message : 'unknown error';
-      return { ok: false, spoken: `That action failed: ${msg}.` } satisfies ActionResult;
-    }
-  });
-
-  ipcMain.handle('realtime:action:cancel', async () => {
-    const had = pendingFresh();
-    pending = null;
-    return { ok: true, spoken: had ? `Cancelled the ${had.verb}.` : 'Nothing to cancel.' } satisfies ActionResult;
-  });
+  // IPC handlers migrated to src/server/ routes
 }

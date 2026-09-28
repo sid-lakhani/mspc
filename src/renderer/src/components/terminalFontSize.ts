@@ -14,7 +14,7 @@ export const DEFAULT_TERMINAL_FONT_SIZE = 12;
 export const MIN_TERMINAL_FONT_SIZE = 8;
 export const MAX_TERMINAL_FONT_SIZE = 40;
 
-const LS_FONT_SIZE = 'cth.ptyFontSize';
+const LS_FONT_SIZE = 'mspc.ptyFontSize';
 
 function load(): number {
   try {

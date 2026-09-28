@@ -1,7 +1,10 @@
-import { app } from 'electron';
-import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
 import { homedir } from 'node:os';
+import { dirname, join } from 'node:path';
+
+/** Resolved once at startup. MSPC_DATA_DIR overrides the default ~/.mspc directory. */
+export const MSPC_DATA_DIR: string = process.env.MSPC_DATA_DIR ?? join(homedir(), '.mspc');
+import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
+
 import {
   autoModeFlagForProvider,
   defaultCommandForProvider,
@@ -278,37 +281,15 @@ export interface HarnessConfig {
   circuitBreaker?: CircuitBreakerConfig;
   /** Enterprise Knowledge Graph (multimodal context for agents). Default OFF. */
   knowledgeGraph?: KnowledgeGraphConfig;
-  /** Fire native desktop notifications on agent lifecycle events (idle finish / waiting for input). */
+  /** Reserved for future server-side notification delivery (e.g. WebSocket push,
+   *  email, or Slack on agent lifecycle events). Default false. */
   notifications?: boolean;
-  /** Opt-in "strong keep-alive": while ≥1 agent PTY is live, escalate the power
-   *  blocker from 'prevent-app-suspension' to 'prevent-display-sleep', which on
-   *  macOS also blocks TRUE system sleep (lid-close/idle) so scheduled missions
-   *  and terminals keep firing ON TIME while away — at a battery cost (best on
-   *  AC). Default OFF: the honest default is "survive sleep + catch up once on
-   *  resume" (see the powerMonitor 'resume' handler), not "stay awake". */
-  strongKeepalive?: boolean;
-  /** Auto-update from GitHub releases (v0.3.4). Default ON. Packaged builds
-   *  check on boot + every ~6h, download in the background, and show a
-   *  "restart to update" toast — installation is always user-initiated. OFF
-   *  disables checking entirely. (Mirrored in preload + renderer config.) */
-  autoUpdate?: boolean;
-  /** Multi-window "floors": expose a New Floor action that opens additional
-   *  windows, each an independent office with isolated renderer state (its own
-   *  session partition) and per-window PTY routing. ON by default (v0.3.4: code
-   *  and comment disagreed; the shipped behavior — enabled — wins) —
-   *  the window/PTY-ownership plumbing is always active and single-window-safe,
-   *  but the New Floor entry points (app menu item + IPC) only appear when on.
-   *  The on-disk hive (god orchestration under harnessHome) stays process-global;
-   *  floors share it. */
-  multiWindow?: boolean;
   /** Terminal theme — mirrored into each agent's per-session Claude settings
    *  ("theme" key) at spawn so the TUI's truecolor palette matches. Scoped to
    *  harness agents only; the user's global Claude theme is never touched. */
   terminalTheme?: 'light' | 'dark';
-  /** Anonymous product analytics (PostHog) — the exact events/properties are
-   *  documented in TELEMETRY.md. Default ON (opt-out, like autoUpdate); builds
-   *  without an injected key and environments with DO_NOT_TRACK set never send
-   *  regardless of this flag. (Mirrored in preload + renderer config.) */
+  /** Local OTLP telemetry collector enabled (src/main/telemetry.ts). Collects
+   *  agent usage/cost data locally; never sends to external services. Default true. */
   telemetryEnabled?: boolean;
   /** Master flag for the TV-show office themes feature (Settings theme picker +
    *  destructive switch flow). Default false = the picker is hidden and the
@@ -354,13 +335,9 @@ export interface HarnessConfig {
   /** Groq Whisper model id. Default 'whisper-large-v3-turbo' (fast, multilingual). */
   freeflowModel?: string;
 
-  // ─── Realtime Michael (premium speech-to-speech voice orchestrator) ─────────
-  /** True ONLY while a Realtime Michael voice session is live: the renderer
-   *  session flips this on at start() (before getUserMedia) and off at stop().
-   *  The main-process mic permission gate reads it so the Electron media
-   *  permission is open EXACTLY while the voice loop holds the mic — never just
-   *  because an OpenAI key exists (that key is shared with the CLI engines).
-   *  Default off; absence ⇒ mic denied, mirroring `freeflowEnabled`. */
+  // ─── Realtime voice orchestrator ─────────────────────────────────────────────
+  /** True while a Realtime voice session is live. The server uses this to gate
+   *  mic-dependent API calls — never just because an OpenAI key exists. Default false. */
   realtimeVoiceEnabled?: boolean;
   /** How long (ms) a realtime voice session may sit with no voice activity before
    *  it auto-disconnects (the rt-9 idle guard). Default 180000 (3 min). 0 = never
@@ -444,10 +421,7 @@ const DEFAULTS: HarnessConfig = {
   embeddingModel: 'minilm',
   missions: [OPS_STANDUP_MISSION],
   notifications: false,
-  strongKeepalive: false,
-  autoUpdate: true,
   telemetryEnabled: true,
-  multiWindow: true,
   tvShowOffices: false,
   officeTheme: 'office',
   slackEnabled: false,
@@ -488,7 +462,7 @@ const DEFAULTS: HarnessConfig = {
 };
 
 function configPath(): string {
-  return join(app.getPath('userData'), 'config.json');
+  return join(MSPC_DATA_DIR, 'config.json');
 }
 
 /**

@@ -342,16 +342,16 @@ interface State {
   reconcileWithLivePtys: (livePtyIds: string[]) => void;
 }
 
-const LS_SIDEBAR_WIDTH = 'cth.sidebarWidth';
-const LS_SIDEBAR_TAB = 'cth.sidebarTab';
-const LS_AGENTS = 'cth.agents';
-const LS_ARCHIVED = 'cth.archivedAgents';
-const LS_RESTORABLE = 'cth.restorableAgents';
-const LS_SELECTED = 'cth.selectedId';
-const LS_QUEUES = 'cth.messageQueues';
+const LS_SIDEBAR_WIDTH = 'mspc.sidebarWidth';
+const LS_SIDEBAR_TAB = 'mspc.sidebarTab';
+const LS_AGENTS = 'mspc.agents';
+const LS_ARCHIVED = 'mspc.archivedAgents';
+const LS_RESTORABLE = 'mspc.restorableAgents';
+const LS_SELECTED = 'mspc.selectedId';
+const LS_QUEUES = 'mspc.messageQueues';
 /** Which hive this origin's roster keys were last written for. See rosterSource.ts. */
-const LS_ROSTER_HOME = 'cth.rosterHome';
-const LS_FOCUS_MODE = 'cth.prefersFocusMode';
+const LS_ROSTER_HOME = 'mspc.rosterHome';
+const LS_FOCUS_MODE = 'mspc.prefersFocusMode';
 
 // Fields that are large or transient — not worth persisting across reloads.
 // contextTokens/contextLimit describe a LIVE session; persisting them showed a

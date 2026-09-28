@@ -14,7 +14,7 @@
  *
  * Branch feat/realtime-michael. See board.md "🎙 REALTIME MICHAEL".
  */
-import { ipcMain } from 'electron';
+
 import { getSecret, hasSecret } from './integrations';
 
 /** Mirrors `providerKeyRef('openai')` in src/main/index.ts (BACKEND_KEY_ENV maps
@@ -114,12 +114,5 @@ export async function mintRealtimeToken(model: string = REALTIME_MODEL): Promise
  *  one line — rt-1 COORD note (Oscar also edits index.ts). Neither handler ever
  *  returns the real OpenAI key. */
 export function registerRealtimeIpc(): void {
-  // Boolean presence only — gates the voice toggle.
-  ipcMain.handle('realtime:hasKey', () => hasOpenAiKey());
-  // Mint an ephemeral token; returns { token, sessionConfig } only.
-  ipcMain.handle('realtime:mintToken', async (_evt, payload: unknown) => {
-    const p = (payload ?? {}) as { model?: unknown };
-    const model = typeof p.model === 'string' && p.model.trim() ? p.model.trim() : REALTIME_MODEL;
-    return mintRealtimeToken(model);
-  });
+  // IPC handlers migrated to src/server/ routes
 }

@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  mspc:
+    build: .
+    container_name: mspc
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - MSPC_PORT=3000
+      - MSPC_DATA_DIR=/data
+      # MSPC_SECRET is required — set via Docker secret or env file
+      - MSPC_SECRET=${MSPC_SECRET}
+      # Optional: public URL for WebSocket upgrades
+      # - MSPC_PUBLIC_URL=https://office.example.com
+    volumes:
+      # Persist data directory (config, agent workspaces, logs, sqlite)
+      - mspc-data:/data
+      # Mount your projects so agents can work on them
+      # - /home/youruser/projects:/projects:rw
+    # Required for PTY/node-pty to work correctly
+    tty: true
+    stdin_open: true
+
+volumes:
+  mspc-data:
+    driver: local

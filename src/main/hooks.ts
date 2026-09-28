@@ -12,7 +12,7 @@
  */
 import { createServer, type Server } from 'node:net';
 import { existsSync, rmSync } from 'node:fs';
-import { Notification, type WebContents } from 'electron';
+
 import type { HiveManager } from './hive';
 import type { HarnessConfig } from './config';
 import type { ControlRegistry } from './control';
@@ -70,7 +70,7 @@ export class HookServer {
 
   constructor(
     private hive: HiveManager,
-    private getWebContents: () => WebContents | null,
+    private getWebContents: () => any | null,
     private getConfig: () => HarnessConfig,
     /** #7C — operator control state. Optional so tests can omit it. */
     private control?: ControlRegistry,
@@ -370,8 +370,7 @@ export class HookServer {
   private notify(title: string, body: string): void {
     if (!this.getConfig().notifications) return;
     try {
-      if (!Notification.isSupported()) return;
-      new Notification({ title, body }).show();
+      // System notifications disabled on headless server.
     } catch { /* notifications unsupported on this platform — ignore */ }
   }
 

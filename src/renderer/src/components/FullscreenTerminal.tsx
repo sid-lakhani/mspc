@@ -28,7 +28,7 @@ import { useRtl } from '@/i18n/useDirection';
  *  the viewport between those two ends. */
 const SIDEBAR_WIDTH = 'clamp(232px, 14vw, 340px)';
 /** Remembers the roster collapse across fullscreen sessions and app restarts. */
-const ROSTER_COLLAPSED_KEY = 'cth.fullscreen.rosterCollapsed';
+const ROSTER_COLLAPSED_KEY = 'mspc.fullscreen.rosterCollapsed';
 
 /** Roster type scale, derived from the shared terminal zoom so Cmd +/- resizes
  *  the whole roster along with the terminal — one knob for the whole view

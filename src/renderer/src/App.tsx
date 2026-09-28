@@ -16,10 +16,7 @@ import { AddAgentModal } from '@/components/AddAgentModal';
 import { MichaelBooting } from '@/components/MichaelBooting';
 import { OnboardingWizard } from '@/components/OnboardingWizard';
 import { HivePicker } from '@/components/HivePicker';
-import { QuitWarningModal, type ClosingTimeState } from '@/components/QuitWarningModal';
 import { CompletionToast } from '@/realtime/CompletionToast';
-import { UpdateToast } from '@/components/UpdateToast';
-import { UpdateBadge } from '@/components/UpdateBadge';
 import { useAppTheme, toggleAppTheme } from '@/design/theme';
 import { SettingsModal, type Section as SettingsSection } from '@/components/SettingsModal';
 import { PixelPanel } from '@/components/PixelPanel';
@@ -65,8 +62,8 @@ export function App() {
   // the hive we just chose. Also set true on onboarding completion (below).
   const [hiveOpened, setHiveOpened] = useState<boolean>(() => {
     try {
-      if (window.localStorage.getItem('cth.skipHivePickerOnce')) {
-        window.localStorage.removeItem('cth.skipHivePickerOnce');
+      if (window.localStorage.getItem('mspc.skipHivePickerOnce')) {
+        window.localStorage.removeItem('mspc.skipHivePickerOnce');
         return true;
       }
     } catch { /* localStorage unavailable — show the picker */ }
@@ -77,7 +74,7 @@ export function App() {
    *  to undefined (→ General) whenever the modal is opened the normal way. */
   const [settingsSection, setSettingsSection] = useState<SettingsSection | undefined>(undefined);
   const [quitWarn, setQuitWarn] = useState<{ ptyCount: number } | null>(null);
-  const [closing, setClosing] = useState<ClosingTimeState | null>(null);
+  const [closing, setClosing] = useState<any | null>(null);
   const [vpWidth, setVpWidth] = useState<number>(window.innerWidth);
 
   // Deep link into Settings from anywhere in the tree. Settings' open state is
@@ -143,7 +140,7 @@ export function App() {
   // Quit warning subscription
   useEffect(() => window.cth.onCloseRequested((info) => setQuitWarn(info)), []);
 
-  // Shareable hires: a validated manifest arriving via the munderdifflin://
+  // Shareable hires: a validated manifest arriving via the mspc://
   // deep link (or file import) pre-fills the Add-Agent modal. Never spawns by itself.
   const enqueuePendingHires = useStore(s => s.enqueuePendingHires);
   const closeAddAgentReview = () => {
@@ -279,7 +276,7 @@ export function App() {
       <CompletionToast />
       {/* v0.3.4: background-update toast ("restart to update"); renders null until
           main's updater pushes a status. */}
-      <UpdateToast />
+
       {/* Title bar */}
       <div
         className="cth-titlebar-drag"
@@ -297,12 +294,12 @@ export function App() {
       >
         <img
           src={brandLogo}
-          alt="Munder Difflin"
+          alt="MSPC"
           style={{ height: 20, width: 'auto', display: 'block' }}
         />
         {/* v0.3.7: the version is no longer inert text — it doubles as the
             update control (check / download / restart to update). */}
-        <UpdateBadge />
+
         <span style={{
           fontFamily: 'var(--cth-font-ui)',
           fontSize: 13,
@@ -495,19 +492,7 @@ export function App() {
         />
       )}
 
-      {quitWarn && (
-        <QuitWarningModal
-          ptyCount={quitWarn.ptyCount}
-          closing={closing}
-          onCancel={() => {
-            if (closing) cancelClosingTime();
-            window.cth.cancelClose();
-            setQuitWarn(null);
-          }}
-          onConfirm={async () => { await window.cth.confirmClose(); }}
-          onClosingTime={startClosingTime}
-        />
-      )}
+
 
       {fullscreenAgentId && <FullscreenTerminal config={config} />}
       {ideOpen && <IdePanel />}

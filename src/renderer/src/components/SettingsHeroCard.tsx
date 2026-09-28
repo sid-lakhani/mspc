@@ -27,10 +27,10 @@ import { useTranslation } from 'react-i18next';
 import { PixelButton } from './PixelButton';
 import { Icon } from './Icon';
 import { DEFAULT_HERO, type HeroPayload } from '@shared/heroPayload';
-import { manualDownloadUrl, pendingVersion, reduceStatus, type UpdateStatus } from '@shared/updateState';
 
-const GITHUB_REPO_URL = 'https://github.com/chaitanyagiri/munder-difflin';
-const FOUNDERS_WALL_URL = 'https://munderdiffl.in/wall.html';
+
+const GITHUB_REPO_URL = 'https://github.com/chaitanyagiri/mspc';
+const FOUNDERS_WALL_URL = 'https://mspc.local/wall.html';
 const DISCORD_URL = 'https://discord.gg/SEDzP5ZPk5';
 
 export function SettingsHeroCard() {
@@ -39,22 +39,8 @@ export function SettingsHeroCard() {
   // Starts on the compiled-in defaults, so there is no empty frame or spinner
   // while the fetch is in flight — it just fills in if anything changed.
   const [hero, setHero] = useState<HeroPayload>(DEFAULT_HERO);
-  /** Whatever release the updater knows about, so the card can offer the
-   *  manual download right where the version is shown. */
-  const [status, setStatus] = useState<UpdateStatus | null>(null);
-  useEffect(() => {
-    const off = window.cth.onUpdateStatus?.((next) => setStatus((prev) => reduceStatus(prev, next)));
-    void window.cth.updateCurrent?.().then((cur) => {
-      if (cur) setStatus((prev) => reduceStatus(prev, cur));
-    }).catch(() => { /* push channel still works */ });
-    return off;
-  }, []);
-  const pending = version ? pendingVersion(status, version) : null;
-  const downloadManually = () => {
-    if (!status) return;
-    const url = manualDownloadUrl(status, window.cth.platform, window.cth.arch);
-    if (url) void window.cth.updateOpenRelease(url);
-  };
+  const pending = null;
+  const downloadManually = () => {};
 
   useEffect(() => {
     let alive = true;

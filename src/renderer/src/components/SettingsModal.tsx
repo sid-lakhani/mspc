@@ -13,7 +13,7 @@ import {
 } from '@shared/triggers';
 import { PixelPanel } from './PixelPanel';
 import { PixelButton } from './PixelButton';
-import { UpdatesSection } from './UpdatesSection';
+
 import { SettingsHeroCard } from './SettingsHeroCard';
 import { SetupPanel } from './SetupPanel';
 import { Icon } from './Icon';
@@ -90,10 +90,10 @@ const slackLabelStyle: CSSProperties = {
 /** The exact connect walkthrough shown behind the i icon. Steps 6 & 7 spell out
  *  the both-lists requirement: subscribe to message.channels / message.groups in
  *  BOTH "Subscribe to bot events" AND "Subscribe to events on behalf of users". */
-const SLACK_CONNECT_STEPS = `Connect Munder Difflin to Slack
+const SLACK_CONNECT_STEPS = `Connect MSPC to Slack
 
 1. api.slack.com/apps -> Create New App -> From scratch. Name it
-   "Munder Difflin" and pick your workspace.
+   "MSPC" and pick your workspace.
 2. Basic Information -> Signing Secret -> copy it into the
    "Signing secret" field here.
 3. OAuth & Permissions -> Bot Token Scopes: add
@@ -156,7 +156,7 @@ function clearLocalState(): void {
     const keys: string[] = [];
     for (let i = 0; i < window.localStorage.length; i++) {
       const k = window.localStorage.key(i);
-      if (k && k.startsWith('cth.')) keys.push(k);
+      if (k && k.startsWith('mspc.')) keys.push(k);
     }
     for (const k of keys) window.localStorage.removeItem(k);
   } catch { /* noop */ }
@@ -986,7 +986,7 @@ export function SettingsModal({ config, onClose, initialSection }: SettingsModal
                           on the latest?" is the question people open Settings to
                           answer, and the toolbar chip says nothing at all when
                           the answer is yes. */}
-                      <UpdatesSection />
+
 
                       <div style={{ height: 1, background: 'var(--cth-ink-300)' }} />
 

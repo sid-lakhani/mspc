@@ -1,5 +1,5 @@
 import * as pty from 'node-pty';
-import type { WebContents } from 'electron';
+
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { delimiter, join, win32 } from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -58,7 +58,7 @@ interface PtySession {
    *  / `pty:exit:<id>` route ONLY here — never broadcast — so one floor's stream
    *  never leaks into another. Null falls back to the default attached sink
    *  (the primary window), preserving single-window behavior. */
-  owner: WebContents | null;
+  owner: any | null;
   /** Epoch ms of the most recent byte this PTY emitted (bumped in onData). The
    *  heartbeat (Lane A #1) reads this for two things: floor-quiet detection (an
    *  agent printing/thinking counts as activity even before it writes a hive
@@ -330,7 +330,7 @@ export function parseNpmCmdShim(shimPath: string, content: string): NpmShimTarge
 
 export class PtyManager {
   private sessions = new Map<string, PtySession>();
-  private webContents: WebContents | null = null;
+  private webContents: any | null = null;
   /** Fired when a PTY exits on its OWN (child finished/crashed/killed
    *  externally), so the main process can run the SAME lifecycle teardown
    *  (archive, worktree removal, map cleanup) that the explicit kill() path
@@ -340,13 +340,13 @@ export class PtyManager {
 
   /** The default/fallback output sink — set to the PRIMARY window. Used only for
    *  sessions with no recorded owner; owned sessions route to their owner. */
-  attachWebContents(wc: WebContents) {
+  attachWebContents(wc: any) {
     this.webContents = wc;
   }
 
   /** Count live PTYs owned by a given window — used to scope a floor's
    *  close-confirmation to its OWN terminals, not the whole app's. */
-  countByOwner(wc: WebContents): number {
+  countByOwner(wc: any): number {
     let n = 0;
     for (const s of this.sessions.values()) if (s.owner === wc) n++;
     return n;
@@ -355,7 +355,7 @@ export class PtyManager {
   /** Kill every PTY owned by a window (its onExit runs the normal teardown:
    *  archive + worktree cleanup). Called when a floor window closes so its
    *  terminals don't linger as orphaned processes writing to a dead webContents. */
-  killByOwner(wc: WebContents): void {
+  killByOwner(wc: any): void {
     for (const [id, s] of [...this.sessions.entries()]) {
       if (s.owner === wc) {
         try {
@@ -382,7 +382,7 @@ export class PtyManager {
    *  PTY fires onExit asynchronously — by then app.quit() may have destroyed the
    *  window, and `.send()` on a destroyed webContents throws "Object has been
    *  destroyed", which surfaces as the main-process crash dialog. Guard it. */
-  private safeSend(channel: string, payload: unknown, target?: WebContents | null): void {
+  private safeSend(channel: string, payload: unknown, target?: any | null): void {
     // Route to the session's owner window when known (multi-window: keeps each
     // floor's stream private); fall back to the default attached sink otherwise.
     const wc = target ?? this.webContents;
@@ -549,7 +549,7 @@ export class PtyManager {
     }
   }
 
-  spawn(opts: SpawnOptions, owner: WebContents | null = null): { ok: boolean; error?: string } {
+  spawn(opts: SpawnOptions, owner: any | null = null): { ok: boolean; error?: string } {
     if (this.sessions.has(opts.id)) {
       return { ok: false, error: `pty already exists for id ${opts.id}` };
     }

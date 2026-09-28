@@ -23,7 +23,7 @@
  *
  * Runs in the Electron main process.
  */
-import type { WebContents } from 'electron';
+
 import type { HiveManager, HiveMessage } from './hive';
 import type { ControlRegistry } from './control';
 
@@ -65,7 +65,7 @@ export class ClosingTimeController {
      *  their registry record without ever being flagged `archived`, so a
      *  registry-based roster waits on ghosts that can never ACK. */
     private getLiveAgentIds: () => string[],
-    private getWebContents: () => WebContents | null,
+    private getWebContents: () => any | null,
     /** Called once the god concluded — runs the real teardown + app.quit(). */
     private onConcluded: () => void,
     /** Mid-run steering (#7C.2): lets closing time reach DEEPLY BUSY agents at

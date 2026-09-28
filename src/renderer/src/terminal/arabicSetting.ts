@@ -32,7 +32,7 @@ import i18n, { isRtlLanguage } from '@/i18n';
  * user off the GPU renderer on upgrade without them asking. Nothing here reads
  * anything but the language they picked and the override they set.
  */
-const KEY = 'cth.arabicTerminal';
+const KEY = 'mspc.arabicTerminal';
 
 /** The user's explicit choice, or `null` for "follow the app language". */
 type Override = boolean | null;

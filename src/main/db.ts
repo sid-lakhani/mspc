@@ -16,8 +16,8 @@
  * they are deliberately NOT built in v1.
  */
 import Database from 'better-sqlite3';
-import { app } from 'electron';
 import { join } from 'node:path';
+import { MSPC_DATA_DIR } from './config';
 
 /** A captured user prompt, as returned to the renderer (camelCase columns). */
 export interface CommandHistoryRow {
@@ -78,7 +78,7 @@ export class PersistStore {
    *  callers should guard so a DB failure can't crash app startup. */
   open(): void {
     if (this.db) return;
-    const path = this.dbPath ?? join(app.getPath('userData'), 'harness.db');
+    const path = this.dbPath ?? join(MSPC_DATA_DIR, 'harness.db');
     const db = new Database(path);
     db.pragma('journal_mode = WAL');
     db.pragma('synchronous = NORMAL');
