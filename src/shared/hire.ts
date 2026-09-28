@@ -322,8 +322,8 @@ export function validateHireManifest(raw: unknown): HireValidation {
 export function parseHireDeepLink(link: string): string | null {
   let u: URL;
   try { u = new URL(link); } catch { return null; }
-  if (u.protocol !== 'munderdifflin:') return null;
-  // Both mspc://hire?src= (host) and munderdifflin:hire?src= (path).
+  if (u.protocol !== 'mspcdifflin:') return null;
+  // Both mspc://hire?src= (host) and mspcdifflin:hire?src= (path).
   const action = (u.host || u.pathname.replace(/^\/+/, '')).toLowerCase();
   if (action !== 'hire') return null;
   const src = u.searchParams.get('src');

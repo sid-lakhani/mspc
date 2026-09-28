@@ -1211,7 +1211,7 @@ export class HiveManager {
   /**
    * W3 — build the per-agent `mcpServers` map from the default catalog. Includes a
    * server only when it's enabled (catalog ∩ consent), scopes filesystem/git to the
-   * agent cwd (never whole-disk), and namespaces every id `munder-<id>` so a server
+   * agent cwd (never whole-disk), and namespaces every id `mspc-<id>` so a server
    * of the same name in the user's own ~/.claude is never clobbered. A write/secret
    * server is included ONLY on an explicit `enabled:true` consent — never via a
    * default — so a malformed/partial config can't silently arm a keyed server.
@@ -1232,7 +1232,7 @@ export class HiveManager {
       // Replace the `<cwd>` placeholder (filesystem/git) with the agent cwd at merge
       // time so these stay strictly workspace-scoped.
       const args = e.spec.args.map((a) => (a === '<cwd>' ? cwd : a));
-      out[`munder-${e.id}`] = {
+      out[`mspc-${e.id}`] = {
         command: e.spec.command,
         args,
         ...(e.spec.env ? { env: e.spec.env } : {})
@@ -1948,7 +1948,7 @@ export class HiveManager {
     try { return readdirSync(dir).filter((f) => f.endsWith('.json')).length; } catch { return 0; }
   }
   /** Install the Antigravity (`agy`) lifecycle-hook bridge: write the normalizer
-   *  shim and merge a `munder-hive` hook group into agy's global hooks.json so a
+   *  shim and merge a `mspc-hive` hook group into agy's global hooks.json so a
    *  Gemini worker reports PreToolUse/PostToolUse/Stop/PreInvocation/PostInvocation
    *  to this HookServer (live status + guarded idle delivery), reusing the Claude pipeline.
    *
@@ -1991,7 +1991,7 @@ export class HiveManager {
         if (existsSync(p)) {
           try { existing = JSON.parse(readFileSync(p, 'utf8')) as Record<string, unknown>; } catch { existing = {}; }
         }
-        existing['munder-hive'] = group;
+        existing['mspc-hive'] = group;
         writeFileSync(p, JSON.stringify(existing, null, 2), 'utf8');
       } catch { /* best-effort per file */ }
     }
@@ -2015,7 +2015,7 @@ export class HiveManager {
         ...(matcher ? { matcher } : {}),
         sequential: true,
         hooks: [{
-          name: `munder-hive-${name}`,
+          name: `mspc-hive-${name}`,
           type: 'command',
           command: process.platform === 'win32'
             ? this.nodeRunUnquoted(shim)
@@ -2122,7 +2122,7 @@ export class HiveManager {
         const command = process.platform === 'win32'
           ? this.nodeRunUnquoted(shim)
           : this.nodeRun(shim);
-        config += '\n# --- munder-hive lifecycle hooks (auto-generated; do not edit) ---\n';
+        config += '\n# --- mspc-hive lifecycle hooks (auto-generated; do not edit) ---\n';
         for (const ev of events) {
           config += `\n[[hooks.${ev}]]\n[[hooks.${ev}.hooks]]\ntype = "command"\ncommand = ${JSON.stringify(command)}\ntimeout = 30\n`;
         }
@@ -2266,7 +2266,7 @@ export class HiveManager {
       writeFileSync(join(extDir, 'hive-bridge.js'), PI_EXTENSION, 'utf8');
       // A manifest so Pi auto-loads the extension on start (best-effort; harmless if
       // Pi ignores it). Kept minimal and hive-authored.
-      const manifest = { name: 'munder-hive-bridge', version: '0.3.1', main: 'extensions/hive-bridge.js', auto: true };
+      const manifest = { name: 'mspc-hive-bridge', version: '0.3.1', main: 'extensions/hive-bridge.js', auto: true };
       writeFileSync(join(home, 'extensions.json'), JSON.stringify(manifest, null, 2), 'utf8');
 
       const userPiDir = join(homedir(), '.pi', 'agent');
@@ -2406,7 +2406,7 @@ export class HiveManager {
       const hookDir = join(homedir(), '.grok', 'hooks');
       mkdirSync(hookDir, { recursive: true });
       writeFileSync(
-        join(hookDir, 'munder-hive.json'),
+        join(hookDir, 'mspc-hive.json'),
         JSON.stringify({ hooks }, null, 2),
         'utf8'
       );
@@ -3424,7 +3424,7 @@ process.stdin.on('end', () => {
 // payload is camelCase and uses snake_case event values. Normalize the input for
 // HookServer and translate its Claude-style permission denial into Grok's direct
 // decision form. Scoped by AGENT_ID so the trusted global hook is inert outside
-// Munder-spawned workers.
+// mspc-spawned workers.
 const GROK_HOOK_SHIM = `#!/usr/bin/env node
 'use strict';
 const net = require('net');

@@ -2,10 +2,7 @@
 
 ## Scope
 
-Munder Difflin is a **local-first desktop app**. It spawns local processes in PTYs and
-reads/writes files under directories you register. It opens **no network listeners
-beyond a local Unix domain socket** used for the in-app hook server, and has no auth or
-remote surface by design.
+MSPC is a **self-hosted web application**. It spawns local processes in PTYs and reads/writes files under directories you register. It opens a local HTTP and WebSocket server (default port 4000) for the browser client to connect to. It has no remote auth by design and is meant to be run in a trusted local environment or behind a secure reverse proxy.
 
 ## Supported versions
 
@@ -21,7 +18,7 @@ This is an early prototype. Security fixes target the `main` branch only.
 Please **do not** open a public issue for security problems.
 
 - Use GitHub's **private vulnerability reporting**: the *Security → Report a
-  vulnerability* tab on https://github.com/chaitanyagiri/munder-difflin, **or**
+  vulnerability* tab on https://github.com/chaitanyagiri/mspc, **or**
 - Email **girichaitanya11@gmail.com** with a description, reproduction steps, and
   impact.
 

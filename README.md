@@ -182,7 +182,7 @@ covers the code only; the bundled pixel art is licensed separately from LimeZu a
 
 ## Attribution
 
-**MSPC** began as a derivative of [Munder Difflin](https://github.com/chaitanyagiri/munder-difflin)
+**MSPC** began as a derivative of [MSPC](https://github.com/chaitanyagiri/mspc)
 by [Chaitanya Giri](https://github.com/chaitanyagiri) and has since been substantially reworked into
 a self-hosted, web-native AI agent workspace.
 

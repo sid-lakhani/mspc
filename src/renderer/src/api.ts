@@ -920,7 +920,7 @@ export const api = {
   },
 
   // ─── Shareable hires (deep link / file import) ────────────────────────────
-  /** Fired when a validated hire manifest arrives via the munderdifflin://
+  /** Fired when a validated hire manifest arrives via the mspcdifflin://
    *  deep link. The renderer opens the Add-Agent modal pre-filled — import
    *  never spawns anything by itself. */
   onHireImport: (cb: (manifest: HireManifest) => void): (() => void) => {
