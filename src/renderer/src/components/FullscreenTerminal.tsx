@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import { PixelBadge } from './PixelBadge';
 import { PixelButton } from './PixelButton';
 import { PtyTerminalView } from './PtyTerminalView';
@@ -148,7 +148,7 @@ export interface FullscreenTerminalProps {
 }
 
 export function FullscreenTerminal({ config }: FullscreenTerminalProps) {
-  const { t } = useTranslation();
+  
   const agents = useStore(s => s.agents);
   const restorableAgents = useStore(s => s.restorableAgents);
   const fullscreenAgentId = useStore(s => s.fullscreenAgentId);
@@ -629,7 +629,7 @@ function shortModel(model?: string): string | null {
 /** Context fullness as a 3px rail. Colour tracks pressure rather than identity —
  *  an agent at 85% is about to compact, and that matters more than its accent. */
 function ContextBar({ tokens, limit, accent }: { tokens?: number; limit?: number; accent: string }) {
-  const { t } = useTranslation();
+  
   if (tokens === undefined || !limit) return null;
   const pct = Math.max(0, Math.min(100, Math.round((tokens / limit) * 100)));
   const color = pct >= 85 ? 'var(--cth-coral)' : pct >= 65 ? 'var(--cth-lemon)' : `var(--cth-${accent})`;
@@ -665,7 +665,7 @@ function SidebarRow({
   drag: RowDrag;
   scale: ReturnType<typeof rosterScale>;
 }) {
-  const { t } = useTranslation();
+  
   const rtl = useRtl();
   const buttonRef = useRef<HTMLButtonElement>(null);
   const noteRef = useRef<HTMLDivElement>(null);
@@ -919,7 +919,7 @@ function SidebarRow({
 }
 
 function Header({ agent, onEdit }: { agent: Agent; onEdit: () => void }) {
-  const { t } = useTranslation();
+  
   const typing = useHasTerminalDraft(agent.ptyId);
   const archiveAgent = useStore((st) => st.archiveAgent);
   const [openState, setOpenState] = useState<'idle' | 'opening' | 'ok' | 'error'>('idle');

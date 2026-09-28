@@ -86,7 +86,7 @@ export function LoginScreen({ onLogin }: { onLogin: () => void }) {
           />
           {error && <div style={{ color: 'var(--cth-error)', fontSize: '0.9rem' }}>{error}</div>}
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <PixelButton type="submit">
+            <PixelButton>
               {setupRequired ? 'Set Password' : 'Login'} <Icon name="arrow-right" />
             </PixelButton>
           </div>

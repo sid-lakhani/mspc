@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import type { TFunction } from 'i18next';
+import { t } from '@/t';
+import type { TFunction } from '@/t';
 import { PixelButton } from '../PixelButton';
 import { useStore } from '@/store/store';
 import {
@@ -52,7 +52,7 @@ function relTime(ms: number, t: TFunction): string {
 }
 
 export function SchedulesSection({ onSummary }: { onSummary?: (s: string) => void }) {
-  const { t } = useTranslation();
+  
   const rtl = useRtl();
   const agents = useStore((s) => s.agents);
   const [missions, setMissions] = useState<ScheduledMission[]>([]);
@@ -191,7 +191,7 @@ function MissionRow({ mission, targetName, agents, onPatch, onDelete }: {
   onPatch: (fields: Partial<ScheduledMission>) => void;
   onDelete: () => void;
 }) {
-  const { t } = useTranslation();
+  
   const rtl = useRtl();
   const [open, setOpen] = useState(false);
   const [label, setLabel] = useState(mission.label);

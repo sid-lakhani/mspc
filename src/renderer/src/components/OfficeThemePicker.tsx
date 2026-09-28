@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import type { HarnessConfig } from '@/store/config';
 import { useStore } from '@/store/store';
 import { disposeTerminal } from './terminalPool';
@@ -27,7 +27,7 @@ const THEME_META: ThemeMeta[] = [
  *  theme picker with the destructive switch flow (report §E). Self-contained so
  *  it stays out of SettingsModal's bulk. */
 export function OfficeThemePicker({ config }: { config: HarnessConfig }) {
-  const { t } = useTranslation();
+  
   const [enabled, setEnabled] = useState(!!config.tvShowOffices);
   const [current, setCurrent] = useState<ThemeId>((config.officeTheme as ThemeId) ?? 'office');
   const [pending, setPending] = useState<ThemeId | null>(null);
@@ -194,7 +194,7 @@ function ThemeSwitchConfirmModal({
   onCancel: () => void;
   onConfirm: () => void;
 }) {
-  const { t } = useTranslation();
+  
   const n = agents.length;
   const working = agents.filter((a) => a.status && !['idle', 'success', 'error'].includes(a.status)).length;
   const godName = useStore.getState().agents.find((a) => a.isGod)?.name ?? 'the orchestrator';

@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import { useAgentSpans, useFleetTelemetry, totalTokens, cacheFraction } from '@/hooks/useTelemetry';
 
 /**
@@ -9,7 +9,7 @@ import { useAgentSpans, useFleetTelemetry, totalTokens, cacheFraction } from '@/
  * the headline upgrade over the old bare tool-count proxy.
  */
 export function ToolWaterfall({ agentId }: { agentId: string }) {
-  const { t } = useTranslation();
+  
   const spans = useAgentSpans(agentId);
   const { samples } = useFleetTelemetry();
   const sample = samples[agentId];

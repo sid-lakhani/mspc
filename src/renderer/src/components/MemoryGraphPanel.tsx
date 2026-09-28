@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import type { TFunction } from 'i18next';
+import { t } from '@/t';
+import type { TFunction } from '@/t';
 import { useStore } from '@/store/store';
 import { PixelBadge } from './PixelBadge';
 import { Icon } from './Icon';
@@ -27,7 +27,7 @@ export function MemoryGraphPanel({
   godId: string;
   onJumpToMemory: (agentId: string) => void;
 }) {
-  const { t } = useTranslation();
+  
   const agents = useStore((s) => s.agents);
 
   const [log, setLog] = useState<MessageLogEntry[]>([]);
@@ -369,7 +369,7 @@ export function MemoryGraphPanel({
 // ─── tooltip bodies ──────────────────────────────────────────────────────────
 
 function NodeTip({ node, memories }: { node: GraphNode; memories: Record<string, string> }) {
-  const { t } = useTranslation();
+  
   if (node.kind === 'agent') {
     const mem = memories[node.id];
     const snippet = mem === undefined ? t('memoryGraph.loadingMemory') : memorySnippet(mem, t);
@@ -401,7 +401,7 @@ function NodeTip({ node, memories }: { node: GraphNode; memories: Record<string,
 }
 
 function EdgeTip({ edge, nodeById }: { edge: GraphEdge; nodeById: Map<string, GraphNode> }) {
-  const { t } = useTranslation();
+  
   const a = nodeById.get(edge.source)?.label ?? edge.source;
   const b = nodeById.get(edge.target)?.label ?? edge.target;
   if (edge.kind === 'topic') {
@@ -420,7 +420,7 @@ function EdgeTip({ edge, nodeById }: { edge: GraphEdge; nodeById: Map<string, Gr
 }
 
 function Legend() {
-  const { t } = useTranslation();
+  
   const items: { c: string; label: string }[] = [
     { c: actColor('request'), label: t('memoryGraph.legendRequest') },
     { c: actColor('query'), label: t('memoryGraph.legendQuery') },

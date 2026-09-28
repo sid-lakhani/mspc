@@ -16,7 +16,7 @@
  * confirmation step in front of anything that writes outside the app.
  */
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import { PixelButton } from './PixelButton';
 import { Icon } from './Icon';
 import { useStore } from '@/store/store';
@@ -29,7 +29,7 @@ const SECTIONS: { kind: ToolKind; titleKey: string; blurbKey: string }[] = [
 ];
 
 function StatusChip({ tool }: { tool: ToolStatus }) {
-  const { t } = useTranslation();
+  
   const ready = tool.found;
   return (
     <span style={{
@@ -45,7 +45,7 @@ function StatusChip({ tool }: { tool: ToolStatus }) {
 }
 
 function ToolRow({ tool }: { tool: ToolStatus }) {
-  const { t } = useTranslation();
+  
   const [copied, setCopied] = useState(false);
   const copy = () => {
     void navigator.clipboard.writeText(tool.installCommand).then(
@@ -117,7 +117,7 @@ function ToolRow({ tool }: { tool: ToolStatus }) {
 }
 
 export function SetupPanel({ onDone }: { onDone?: () => void } = {}) {
-  const { t } = useTranslation();
+  
   const [tools, setTools] = useState<ToolStatus[] | null>(null);
   const [busy, setBusy] = useState(false);
   const requestDispatchSeed = useStore((s) => s.requestDispatchSeed);

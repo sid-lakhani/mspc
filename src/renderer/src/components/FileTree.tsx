@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import { Icon } from './Icon';
 
 interface DirEntry {
@@ -36,7 +36,7 @@ function fmtSize(n: number): string {
 const HIDE_PATTERNS = [/^\.git$/, /^node_modules$/, /^out$/, /^dist$/];
 
 export function FileTree({ root, activeRel, onOpenFile, onCopyPath }: FileTreeProps) {
-  const { t } = useTranslation();
+  
   const [tree, setTree] = useState<NodeState>({
     rel: '', name: 'root', isDir: true, expanded: true
   });

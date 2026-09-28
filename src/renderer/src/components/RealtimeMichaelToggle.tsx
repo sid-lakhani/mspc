@@ -18,7 +18,7 @@
  */
 import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import { createPortal } from 'react-dom';
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import { PixelButton } from './PixelButton';
 import { Icon } from './Icon';
 import { useStore } from '@/store/store';
@@ -86,7 +86,7 @@ export interface RealtimeMichaelToggleProps {
 }
 
 export function RealtimeMichaelToggle({ compact = false }: RealtimeMichaelToggleProps) {
-  const { t } = useTranslation();
+  
   const hasOpenAiKey = useStore((s) => s.hasOpenAiKey);
   const { status, error, connect, disconnect } = useRealtimeMichael();
   // Measured viewport coords, not a CSS offset. The agent dock clips its

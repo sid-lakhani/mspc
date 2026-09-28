@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import { type SidebarTab } from '@/store/store';
 import { type AccentColorName } from '@/design/tokens';
 import { Icon, type IconName } from './Icon';
@@ -19,7 +19,7 @@ export interface SidebarTabsProps {
 }
 
 export function SidebarTabs({ current, accent, onChange }: SidebarTabsProps) {
-  const { t } = useTranslation();
+  
   return (
     <div style={{
       display: 'flex',

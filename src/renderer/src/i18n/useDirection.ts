@@ -1,5 +1,6 @@
+import { i18n } from '@/t';
 import { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import { directionFor, isRtlLanguage } from './index';
 
 /**
@@ -25,7 +26,7 @@ import { directionFor, isRtlLanguage } from './index';
 
 /** True only when the user has selected a right-to-left app language. */
 export function useRtl(): boolean {
-  const { i18n } = useTranslation();
+  
   return isRtlLanguage(i18n.language);
 }
 
@@ -37,7 +38,7 @@ export function useRtl(): boolean {
  * back rather than stranding it.
  */
 export function useDirectionSync(): void {
-  const { i18n } = useTranslation();
+  
   const lng = i18n.language;
   useEffect(() => {
     const html = document.documentElement;

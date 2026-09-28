@@ -18,7 +18,7 @@
  * Branch feat/realtime-michael. See board.md "🎙 REALTIME MICHAEL".
  */
 import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import { formatUsd } from '@shared/realtimePricing';
 import { useRealtimeCost } from './costStore';
 import { isComposingKey } from '@shared/imeGuard';
@@ -59,7 +59,7 @@ export interface CostHudProps {
 }
 
 export function CostHud({ compact = false }: CostHudProps): React.ReactElement | null {
-  const { t } = useTranslation();
+  
   const { usd, inputTokens, outputTokens, capUsd, overCap, startedTs, setCap } = useRealtimeCost();
   // Local text state so the field can be cleared/typed without fighting the store.
   const [capText, setCapText] = useState(capUsd != null ? String(capUsd) : '');

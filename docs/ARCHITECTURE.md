@@ -9,14 +9,14 @@ Two data planes feed one renderer:
 
 ```
 ┌───────────────────────────────────────────────────────────────┐
-│                     Electron Renderer (React)                  │
+│                     Web Client (React)                         │
 │   ┌──────────────────┐    ┌──────────────────────────────┐    │
 │   │ Office Floor      │    │ Terminal + Command Bar       │    │
 │   │ (Pixi.js)        │    │ Files + Git tabs (xterm.js)  │    │
 │   └─────────▲────────┘    └────────────▲─────────────────┘    │
 │             │ avatar state             │ pty bytes / fs / git  │
 └─────────────┼──────────────────────────┼───────────────────────┘
-              │ IPC (contextBridge: window.cth)
+              │ WebSocket / API Bridge (window.cth)
        ┌──────┴──────────┐        ┌──────┴─────────────┐
        │  Event Plane    │        │  Terminal Plane    │
        │  hooks / hive   │        │  node-pty PTYs     │
@@ -29,9 +29,9 @@ Two data planes feed one renderer:
                    └─────────────────────┘
 ```
 
-- **Terminal plane.** The main process owns a `PtyManager` that spawns each agent as a `node-pty`
-  process and streams output over per-id IPC (`pty:data:<id>`). The renderer talks only through a
-  typed `window.cth` bridge ([`src/preload/index.ts`](../src/preload/index.ts)), which also exposes
+- **Terminal plane.** The backend server owns a `PtyManager` that spawns each agent as a `node-pty`
+  process and streams output over per-id WebSockets (`pty:data:<id>`). The client talks only through a
+  typed `window.cth` API client, which also exposes
   sandboxed filesystem and git helpers.
 - **Hive / event plane.** `hive.ts` is the on-disk multi-agent layer; `hooks.ts` runs the hook
   server that provider bridges POST lifecycle payloads to (`cth-hook` for Claude Code, `agy-hook`
@@ -42,7 +42,7 @@ Two data planes feed one renderer:
 
 ```
 src/
-  main/                      Electron main process (Node)
+  main/                      Core Backend logic (Node)
     index.ts                 window, IPC handlers, quit guard
     pty.ts                   node-pty manager (spawn/write/resize/kill/stream)
     hive.ts                  on-disk multi-agent layer (memory, mailboxes, router)
@@ -58,12 +58,12 @@ src/
     github.ts                GitHub issue + CI run ingestion via the gh CLI
     shellEnv.ts              resolve PATH and shell env for child processes
     fs.ts / git.ts           sandboxed filesystem + git bridges
-  preload/                   contextBridge → typed window.cth API
+  server/                    Express Server & WebSocket handlers
   renderer/src/
     App.tsx                  top-level layout + wiring
     design/                  tokens.css / tokens.ts / global.css (design source of truth)
     components/              PixelPanel, AgentDetailPanel, CommandBar, ApprovalsPanel, MemoryPanel, …
-    CommandCenterPanel,      Michael's control surface (Terminal/Floor/Memory/Activity/Tasks/Triggers/Handbook tabs)
+    CommandCenterPanel,      MSPC's control surface (Terminal/Floor/Memory/Activity/Tasks/Triggers/Handbook tabs)
     ToolWaterfall,           per-agent tool-span waterfall for the observability view
     TasksKanban,             dependency-aware kanban board (Tasks tab)
     ThreadsPanel,            hive message conversation viewer (Messages tab)

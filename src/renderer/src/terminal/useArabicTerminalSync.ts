@@ -1,5 +1,6 @@
+import { i18n } from '@/t';
 import { useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import { isArabicTerminalEnabled } from './arabicSetting';
 import { notifyArabicTerminalChangeAll } from '@/components/terminalPool';
 
@@ -16,7 +17,7 @@ import { notifyArabicTerminalChangeAll } from '@/components/terminalPool';
  * a WebGL lease at boot for no reason.
  */
 export function useArabicTerminalSync(): void {
-  const { i18n } = useTranslation();
+  
   const lng = i18n.language;
   const last = useRef<boolean | null>(null);
   useEffect(() => {

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import type { ContextRule, ContextTriggerConfig } from '@shared/triggers';
 import { getContextTrigger, setContextTrigger } from './api';
 import {
@@ -17,7 +17,7 @@ import { useRtl } from '@/i18n/useDirection';
 const WRITE_DEBOUNCE_MS = 400;
 
 export function ContextSection({ onSummary }: { onSummary?: (s: string) => void }) {
-  const { t } = useTranslation();
+  
   const [cfg, setCfg] = useState<ContextTriggerConfig | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -94,7 +94,7 @@ function RuleCard({ title, blurb, rule, messageLabel, messageHint, messagePlaceh
   caution?: ReactNode;
   onPatch: (fields: Partial<ContextRule>) => void;
 }) {
-  const { t } = useTranslation();
+  
   const rtl = useRtl();
   const [open, setOpen] = useState(false);
   return (

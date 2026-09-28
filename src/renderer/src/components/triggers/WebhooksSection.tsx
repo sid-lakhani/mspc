@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import { PixelButton } from '../PixelButton';
 import { useStore } from '@/store/store';
 import { TRIGGER_MODES, type TriggerMode, type WebhookTrigger } from '@shared/triggers';
@@ -30,7 +30,7 @@ import {
 const STATUS_POLL_MS = 5000;
 
 export function WebhooksSection({ onSummary }: { onSummary?: (s: string) => void }) {
-  const { t } = useTranslation();
+  
   const hooks = useStore((s) => s.webhookTriggers);
   const setHooks = useStore((s) => s.setWebhookTriggers);
   const [status, setStatus] = useState<WebhooksStatus>({ running: false, endpoints: [] });
@@ -123,7 +123,7 @@ function WebhookRow({ hook, url, serverRunning, onPatch, onDelete }: {
   onPatch: (fields: Partial<WebhookTrigger>, persist?: boolean) => void;
   onDelete: () => void;
 }) {
-  const { t } = useTranslation();
+  
   const [open, setOpen] = useState(false);
   const [revealed, setRevealed] = useState(false);
   const [copied, setCopied] = useState<'url' | 'secret' | null>(null);

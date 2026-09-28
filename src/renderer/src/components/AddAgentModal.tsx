@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useState, type CSSProperties } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t as tr } from '@/t';
 import { PixelPanel } from './PixelPanel';
 import { PixelButton } from './PixelButton';
 import { SpritePortrait } from './SpritePortrait';
@@ -143,7 +143,7 @@ export interface AddAgentModalProps {
 }
 
 export function AddAgentModal({ onClose, config, onConfigChange }: AddAgentModalProps) {
-  const { t: tr } = useTranslation();
+  
   const rtl = useRtl();
   const addAgent = useStore(s => s.addAgent);
   // Deep links and file batches share one FIFO. The head alone seeds the form;

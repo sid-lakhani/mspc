@@ -1,5 +1,5 @@
 import { useEffect, useState, type CSSProperties } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t as tr } from '@/t';
 import { authTypeNeedsSecret as needsSecret } from '@shared/integrations';
 import { PixelButton } from './PixelButton';
 import {
@@ -95,7 +95,7 @@ function draftFromRecord(r: IntegrationRecordView): Draft {
 }
 
 export function IntegrationsRegistry() {
-  const { t: tr } = useTranslation();
+  
   const [templates, setTemplates] = useState<IntegrationTemplate[]>([]);
   const [records, setRecords] = useState<IntegrationRecordView[]>([]);
 

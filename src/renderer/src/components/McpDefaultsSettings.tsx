@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import type { HarnessConfig } from '@/store/config';
 import { MCP_CATALOG, type McpTier } from '@shared/mcpCatalog';
 
@@ -28,7 +28,7 @@ const labelStyle: React.CSSProperties = {
 };
 
 export function McpDefaultsSettings({ config }: McpDefaultsSettingsProps) {
-  const { t } = useTranslation();
+  
   const [note, setNote] = useState('');
 
   const enabledFor = (id: string): boolean =>

@@ -1,5 +1,5 @@
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import { useStore, type Agent } from '@/store/store';
 import { FileTree } from '@/components/FileTree';
 import { Icon } from '@/components/Icon';
@@ -94,7 +94,7 @@ function pickIdeTarget(): IdeTarget {
 }
 
 export function IdePanel() {
-  const { t } = useTranslation();
+  
   const setIdeOpen = useStore((s) => s.setIdeOpen);
   const [target] = useState<IdeTarget>(pickIdeTarget);
   const root = target.root;
@@ -774,7 +774,7 @@ function EditorBar({ rel, dirty, saveState, onSave, onCopy, mdView, onMdView, on
   /** Set only for files that are ALSO images (SVG) — jumps back to the picture. */
   onViewImage?: () => void;
 }) {
-  const { t } = useTranslation();
+  
   return (
     <div style={ideBarStyle}>
       <Icon name="code" />

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import { PixelPanel } from './PixelPanel';
 import { PixelButton } from './PixelButton';
 import { PixelBadge } from './PixelBadge';
@@ -118,7 +118,7 @@ export function parseTasks(raw: unknown): HiveTask[] {
  * god), never by the human inserting cards the orchestrator never heard about.
  */
 export function TasksKanban() {
-  const { t } = useTranslation();
+  
   const agents = useStore((s) => s.agents);
   const [tasks, setTasks] = useState<HiveTask[]>([]);
   // Detail view: cards show just the title — clicking one opens the full
@@ -233,7 +233,7 @@ function TaskCard({ task, accent, assigneeName, onOpen, onDismiss }: {
   onOpen: () => void;
   onDismiss: () => void;
 }) {
-  const { t } = useTranslation();
+  
   return (
     <div style={{ position: 'relative', display: 'flex' }}>
       <button
@@ -314,7 +314,7 @@ export function TaskDetail({ task, all, assigneeName, onMove, onAssign, onClose 
   onAssign: () => void;
   onClose: () => void;
 }) {
-  const { t } = useTranslation();
+  
   const rtl = useRtl();
   const col = COLUMNS.find((c) => c.key === task.status) ?? COLUMNS[0];
   // Belt + suspenders: parseTasks normalizes these, but the ledger is a
@@ -466,7 +466,7 @@ export function TaskDetail({ task, all, assigneeName, onMove, onAssign, onClose 
 }
 
 function PriorityDots({ level }: { level: number }) {
-  const { t } = useTranslation();
+  
   // 1 = lowest, 5 = highest. Warmer fill as priority climbs.
   const color = level >= 4 ? 'var(--cth-coral)' : level === 3 ? 'var(--cth-lemon)' : 'var(--cth-mint)';
   return (

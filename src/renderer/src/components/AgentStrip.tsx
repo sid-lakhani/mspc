@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import { AgentCard } from './AgentCard';
 import { PixelButton } from './PixelButton';
 import { Icon } from './Icon';
@@ -15,7 +15,7 @@ export interface AgentStripProps {
 }
 
 export function AgentStrip({ config }: AgentStripProps) {
-  const { t } = useTranslation();
+  
   const rtl = useRtl();
   const agents = useStore(s => s.agents);
   const restorableAgents = useStore(s => s.restorableAgents);

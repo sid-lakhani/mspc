@@ -12,5 +12,5 @@ import { setGodName } from './index';
  */
 export function useGodNameSync(): void {
   const name = useStore((s) => s.agents.find((a) => a.isGod)?.name);
-  useEffect(() => { setGodName(name); }, [name]);
+  useEffect(() => { setGodName(name ?? ''); }, [name]);
 }

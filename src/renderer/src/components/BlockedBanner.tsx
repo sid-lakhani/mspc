@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import { PixelButton } from './PixelButton';
 import { Icon } from './Icon';
 import type { BlockReason } from '@/store/store';
@@ -9,7 +9,7 @@ export interface BlockedBannerProps {
 }
 
 export function BlockedBanner({ reason, onAction }: BlockedBannerProps) {
-  const { t } = useTranslation();
+  
   return (
     <div style={{
       background: 'var(--cth-coral-light)',

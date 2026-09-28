@@ -15,7 +15,7 @@
  * editable — so the tab strip reads as one surface rather than two.
  */
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import { Icon } from '@/components/Icon';
 import { useWorkspaceImage } from '@/hooks/useWorkspaceImage';
 import { formatBytes, isSvgPath } from '@shared/imageTypes';
@@ -34,7 +34,7 @@ export interface ImagePreviewProps {
 }
 
 export function ImagePreview({ root, rel, onCopyPath, onViewSource }: ImagePreviewProps) {
-  const { t } = useTranslation();
+  
   const img = useWorkspaceImage(root, rel);
   // Fit is the default because the common case is a full-screen screenshot that
   // is far wider than the pane; showing it at 1:1 first would open every tab

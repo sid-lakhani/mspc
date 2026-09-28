@@ -1,5 +1,5 @@
 import { useState, KeyboardEvent } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import { PixelPanel } from './PixelPanel';
 import { PixelButton } from './PixelButton';
 import { Icon } from './Icon';
@@ -16,7 +16,7 @@ export interface CommandBarProps {
 }
 
 export function CommandBar({ accent, busy, blocked, onSend }: CommandBarProps) {
-  const { t } = useTranslation();
+  
   const [mode, setMode] = useState<Mode>('free');
   const [text, setText] = useState('');
 

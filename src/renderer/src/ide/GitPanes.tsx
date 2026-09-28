@@ -5,7 +5,7 @@
  * process; these panes only render what the IPC returns.
  */
 import { useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import { CommitGraph } from '@/components/git/CommitGraph';
 import { Icon } from '@/components/Icon';
 
@@ -61,7 +61,7 @@ export function HistoryPane({ gitRoot, onOpenRevDiff }: {
   /** Open a Monaco diff of `path` between `revA` (parent/base) and `revB`. */
   onOpenRevDiff: (revA: string, revB: string, path: string, label: string) => void;
 }) {
-  const { t } = useTranslation();
+  
   const [commits, setCommits] = useState<GitCommitRow[]>([]);
   const [branch, setBranch] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -159,7 +159,7 @@ export function ComparePane({ gitRoot, onOpenRevDiff }: {
   gitRoot: string;
   onOpenRevDiff: (revA: string, revB: string, path: string, label: string) => void;
 }) {
-  const { t } = useTranslation();
+  
   const [branches, setBranches] = useState<string[]>([]);
   const [base, setBase] = useState('');
   const [head, setHead] = useState('');

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, type CSSProperties } from 'react';
-import { useTranslation } from 'react-i18next';
-import type { TFunction } from 'i18next';
+import { t } from '@/t';
+import type { TFunction } from '@/t';
 import { PixelButton } from '../PixelButton';
 import { useStore } from '@/store/store';
 import type { TriggerHistoryEntry } from '@shared/triggers';
@@ -178,14 +178,14 @@ function Badge({ fill, line, children }: { fill: string; line: string; children:
 }
 
 function KindBadge({ kind }: { kind: TriggerHistoryEntry['kind'] }) {
-  const { t } = useTranslation();
+  
   return kind === 'directive'
     ? <Badge fill="var(--cth-lemon-light)" line="var(--cth-lemon)">{t('triggerHistory.kindDirective')}</Badge>
     : <Badge fill="var(--cth-sky-light)" line="var(--cth-sky)">{t('triggerHistory.kindCommunication')}</Badge>;
 }
 
 function DecisionBadge({ decision }: { decision: NonNullable<TriggerHistoryEntry['decision']> }) {
-  const { t } = useTranslation();
+  
   switch (decision) {
     case 'pending':
       return <Badge fill="var(--cth-lemon-light)" line="var(--cth-lemon)">{t('triggerHistory.decisionPending')}</Badge>;
@@ -211,7 +211,7 @@ function MessageBlock({
   expanded: boolean;
   onToggle: () => void;
 }) {
-  const { t } = useTranslation();
+  
   const rtl = useRtl();
   const body = msg.body ?? '';
   const { text, clipped } = useMemo(() => clampBody(body), [body]);
@@ -246,7 +246,7 @@ function ExchangeCard({
   busy: Record<string, boolean>;
   onDecide: (id: string, decision: 'approved' | 'rejected') => void;
 }) {
-  const { t } = useTranslation();
+  
   const godName = useStore((s) => s.agents.find((a) => a.isGod)?.name) ?? 'the orchestrator';
   const head = ex.head;
   const hasInbound = ex.msgs.some((m) => m.direction === 'inbound');
@@ -371,7 +371,7 @@ const SECTIONS: { key: Source; labelKey: string; blurbKey: string }[] = [
 /* ──────────────────────────────── the tab ────────────────────────────────── */
 
 export function TriggerHistoryTab() {
-  const { t } = useTranslation();
+  
   const godName = useStore((s) => s.agents.find((a) => a.isGod)?.name) ?? 'the orchestrator';
   const [entries, setEntries] = useState<TriggerHistoryEntry[]>([]);
   const [source, setSource] = useState<Source>('webhook');

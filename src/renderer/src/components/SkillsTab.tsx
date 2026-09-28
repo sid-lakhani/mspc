@@ -10,7 +10,7 @@
  * click — the catalog links out and the user chooses.
  */
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import { PixelButton } from './PixelButton';
 import type { LocalSkill, CatalogSkill } from '@/api';
 
@@ -35,7 +35,7 @@ function Chip({ text, tone = 'quiet' }: { text: string; tone?: 'quiet' | 'accent
 }
 
 export function SkillsTab({ agentCwd }: { agentCwd?: string }) {
-  const { t } = useTranslation();
+  
   const [mode, setMode] = useState<Mode>('installed');
   const [query, setQuery] = useState('');
   const [local, setLocal] = useState<LocalSkill[] | null>(null);

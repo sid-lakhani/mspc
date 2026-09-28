@@ -197,7 +197,7 @@ The data-loading logic mirrors `ActivityTab` (poll `hiveLog` on a 5s interval) a
 - **Self-loops** (agent messaging itself, or god→god) are dropped.
 - **Memory fetch cost:** topic extraction needs every agent's memory text. Fetch lazily and cache by id; only refetch when the topics layer is enabled, so the default (agents-only) view does N=0 memory reads beyond what hover needs.
 - **Stability:** deterministic seeding + pinned dragged nodes → the graph doesn't reshuffle on every poll.
-- **Worktree caveat:** this runs in the Electron renderer; it cannot be exercised by a full GUI run from the worktree. The Phase 2 bar is a clean `npm run typecheck` + `npm run build` (per dispatch).
+- **Worktree caveat:** this runs in the Web Client; it cannot be exercised by a full GUI run from the worktree. The Phase 2 bar is a clean `npm run typecheck` + `npm run build` (per dispatch).
 - **Non-goals (v1):** time-scrubbing/playback; editing memory from the graph; semantic (MemPalace-derived) topic clustering; persisting layout across app restarts. All candidate v2 follow-ups.
 
 ---

@@ -87,7 +87,7 @@ localStorage.removeItem('cth.updateStarAsked')
 
 ## One thing to know about pre-release tags
 
-`/releases/latest` excludes pre-releases and electron-updater's `latest` channel
+`/releases/latest` excludes pre-releases and node-updater's `latest` channel
 skips them, so a `-rc` tag never triggers the toast or the drop for stable users.
 Only a plain higher `X.Y.Z` does. Test drops with `updateSimulate`, not by
 publishing an rc.

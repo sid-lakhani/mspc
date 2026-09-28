@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import { SchedulesSection } from './SchedulesSection';
 import { ContextSection } from './ContextSection';
 import { WebhooksSection } from './WebhooksSection';
@@ -18,7 +18,7 @@ import { Muted, Scroll, TriggerCard } from './ui';
  * way, so nothing is more than two disclosures from legible.
  */
 export function TriggersTab() {
-  const { t } = useTranslation();
+  
   const [schedulesSummary, setSchedulesSummary] = useState('');
   const [contextSummary, setContextSummary] = useState('');
   const [webhooksSummary, setWebhooksSummary] = useState('');

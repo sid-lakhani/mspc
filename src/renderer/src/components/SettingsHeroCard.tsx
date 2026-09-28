@@ -23,7 +23,7 @@
  * thing the release modal does. Plan label and blurb still come from hero.json.
  */
 import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import { PixelButton } from './PixelButton';
 import { Icon } from './Icon';
 import { DEFAULT_HERO, type HeroPayload } from '@shared/heroPayload';
@@ -34,7 +34,7 @@ const FOUNDERS_WALL_URL = 'https://mspc.local/wall.html';
 const DISCORD_URL = 'https://discord.gg/SEDzP5ZPk5';
 
 export function SettingsHeroCard() {
-  const { t } = useTranslation();
+  
   const [version, setVersion] = useState<string | null>(null);
   // Starts on the compiled-in defaults, so there is no empty frame or spinner
   // while the fetch is in flight — it just fills in if anything changed.

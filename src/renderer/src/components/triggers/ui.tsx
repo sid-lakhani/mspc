@@ -1,5 +1,5 @@
 import { useState, type CSSProperties, type ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import { TRIGGER_MODES, type TriggerMode } from '@shared/triggers';
 import {
   WEEKDAY_INITIALS, WEEKDAY_LABELS, formatMinute, normalizeWeekly,
@@ -83,7 +83,7 @@ export function Callout({ children, tone = 'warn' }: { children: ReactNode; tone
 export function Toggle({ on, onClick, onLabel, offLabel }: {
   on: boolean; onClick: () => void; onLabel?: string; offLabel?: string;
 }) {
-  const { t } = useTranslation();
+  
   return (
     <button
       onClick={onClick}
@@ -295,7 +295,7 @@ const CUSTOM = '__custom';
 export function IntervalPicker({ value, onChange, minMs = MINUTE, maxMs = Number.POSITIVE_INFINITY }: {
   value: number; onChange: (ms: number) => void; minMs?: number; maxMs?: number;
 }) {
-  const { t } = useTranslation();
+  
   const opts = INTERVAL_OPTS.filter((o) => o.ms >= minMs && o.ms <= maxMs);
   const preset = opts.some((o) => o.ms === value);
   const [custom, setCustom] = useState(!preset);
@@ -377,7 +377,7 @@ export function SecretField({ value, revealed, onReveal, onCopy, copied, placeho
   onChange?: (v: string) => void;
   onBlur?: () => void;
 }) {
-  const { t } = useTranslation();
+  
   const readOnly = !onChange;
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -421,7 +421,7 @@ export function weeklyIsUsable(w: WeeklyDraft): boolean {
 export function WeeklyPicker({ value, onChange }: {
   value: WeeklyDraft; onChange: (w: WeeklyDraft) => void;
 }) {
-  const { t } = useTranslation();
+  
   const toggle = (d: number) => onChange({
     ...value,
     days: value.days.includes(d) ? value.days.filter((x) => x !== d) : [...value.days, d].sort((a, b) => a - b)
@@ -492,7 +492,7 @@ export function SchedulePicker({ intervalMs, weekly, onInterval, onWeekly }: {
   onInterval: (ms: number) => void;
   onWeekly: (w: WeeklyDraft | null) => void;
 }) {
-  const { t } = useTranslation();
+  
   const tab = (active: boolean): CSSProperties => ({
     padding: '3px 10px 2px', border: 'none', cursor: 'pointer',
     background: active ? 'var(--cth-cream-100)' : 'transparent',

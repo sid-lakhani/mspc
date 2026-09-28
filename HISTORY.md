@@ -483,9 +483,9 @@ It never ran. Not once, in any packaged build, since it shipped in v0.3.4 — an
 way to tell you so.
 
 ### Fixed
-- **The native updater actually runs.** `electron-updater` is CommonJS and exposes `autoUpdater`
+- **The native updater actually runs.** `node-updater` is CommonJS and exposes `autoUpdater`
   through a lazy `Object.defineProperty` getter, which Node's `cjs-module-lexer` cannot see. So
-  `await import('electron-updater')` produced a namespace with no `autoUpdater` export — only
+  `await import('node-updater')` produced a namespace with no `autoUpdater` export — only
   `.default.autoUpdater` — and destructuring it yielded `undefined`. The first line of setup threw
   `TypeError: Cannot set properties of undefined (setting 'autoDownload')` into a `catch` that
   silently latched notify-only mode for the whole session. Every packaged build from v0.3.4 to
@@ -704,7 +704,7 @@ agent engine, the project's **first community-contributed provider**
   HEAD**) plus the reused workspace **file tree** (click → edit). Right: **editor tabs** with
   dirty-state dots, save, and close; **Cmd/Ctrl+S** saves the active tab. The workspace root
   snapshots from the selected/god/first agent cwd. Monaco is **fully self-hosted** —
-  electron-vite-safe bootstrap with bundled `?worker` imports and `loader.config({ monaco })`, no
+  vite-safe bootstrap with bundled `?worker` imports and `loader.config({ monaco })`, no
   CDN — themed to the harness's light palette, and **all fs/git access goes through main-process
   IPC** (`git:diff` + preload bridge; the renderer holds no fs/git access)
   (`src/renderer/src/ide/*`, `src/main/git.ts`).
@@ -911,7 +911,7 @@ Hiring Fair) with **six off-the-shelf hires**, feature-aware onboarding, and wak
 hardening. Everything from v0.2.8 and earlier is included.
 
 ### Added
-- **Selectable agent engines + per-hire capabilities.** A new engine abstraction (`agentProvider` + an `mcpCatalog`, mirrored across a 3-file config) makes the runtime behind each agent *pluggable* — Claude Code, Antigravity, Codex, or a **local provider** (a claw/qwen backend proxy bridge with default-MCP merge). Each hire carries its own **manifest** of allowed skills + MCP servers (a default-deny allowlist over the catalog), with **bundled skills** shipped via Electron `extraResources` (`resources/skills` → `<resources>/skills`) and a **consent UI** that surfaces every skill/MCP a hire wants before it can use it — untrusted hire input is reviewed, never auto-granted.
+- **Selectable agent engines + per-hire capabilities.** A new engine abstraction (`agentProvider` + an `mcpCatalog`, mirrored across a 3-file config) makes the runtime behind each agent *pluggable* — Claude Code, Antigravity, Codex, or a **local provider** (a claw/qwen backend proxy bridge with default-MCP merge). Each hire carries its own **manifest** of allowed skills + MCP servers (a default-deny allowlist over the catalog), with **bundled skills** shipped via Node `extraResources` (`resources/skills` → `<resources>/skills`) and a **consent UI** that surfaces every skill/MCP a hire wants before it can use it — untrusted hire input is reviewed, never auto-granted.
 - **Swappable Michael (god) engine.** The orchestrator is no longer hard-wired to one CLI: `useHive` gains an engine-spawn path, Onboarding gains an **engine picker** for Michael, and a **change-engine flow** lets you re-home the god orchestrator onto a different engine without rebuilding the floor.
 - **Integrations registry + loopback secret broker.** A declarative **integrations registry** (`src/shared/integrations.ts`) plus a **loopback secret broker** (`src/main/integrationBroker.ts`): secrets are **write-only** (set once, never read back into the renderer) and reached only through the broker over loopback. A **registry-driven Settings UI** (`IntegrationsRegistry`) renders each integration's config form from the spec — conformed to registry spec v1 — and a first wave of **declarative templates** (the canonical schema + initial YC-style templates) ships in the registry. The `integrations:*` surface is exposed to the renderer through a dedicated preload bridge.
 - **God-triggered ephemeral Slack worker loop.** Michael can now **spawn an isolated worker directly in response to a Slack request** — the worker does the work, posts its reply back into the thread, and is then **torn down safely**. Lifecycle hardening adds **worktree garbage collection**, **token-cap wiring** per spawned worker, and a **teardown-safety gate** that refuses to auto-discard a worker's *unintegrated* work. The `pty:spawn` IPC handler was refactored into a reusable `spawnAgentCore` that underpins worker spawning, and a new **Workers tab** surfaces live ephemeral workers in the UI.
@@ -945,7 +945,7 @@ click. Plus **The Hiring Fair**, a community gallery of ready-made roles, and a 
 untrusted-input import pipeline.
 
 ### Added
-- **Shareable hires (#70, #71).** A portable `mspc/hire@1` JSON manifest describing a role-configured agent — name, sprite, provider, model, command flags, goal, capability tags, token budget. Two import paths, one pipeline: a `mspcdifflin://hire?src=<https-manifest-url>` deep link (fetched and validated in the main process, queued, then pulled by the renderer on mount) and an *import hire…* button in the Add-Agent modal that reads a local manifest file. Either way the manifest only **pre-fills** the Add-Agent modal behind an "imported" banner; spawning stays an explicit human click — import never auto-spawns. Protocol registration ships for all three platforms (macOS `open-url`, Windows/Linux single-instance lock + cold-start argv forwarding), and packaged builds register the scheme via `electron-builder.yml`.
+- **Shareable hires (#70, #71).** A portable `mspc/hire@1` JSON manifest describing a role-configured agent — name, sprite, provider, model, command flags, goal, capability tags, token budget. Two import paths, one pipeline: a `mspcdifflin://hire?src=<https-manifest-url>` deep link (fetched and validated in the main process, queued, then pulled by the renderer on mount) and an *import hire…* button in the Add-Agent modal that reads a local manifest file. Either way the manifest only **pre-fills** the Add-Agent modal behind an "imported" banner; spawning stays an explicit human click — import never auto-spawns. Protocol registration ships for all three platforms (macOS `open-url`, Windows/Linux single-instance lock + cold-start argv forwarding), and packaged builds register the scheme via `node-builder.yml`.
 - **The Hiring Fair — community gallery** at [mspc.com/hires](https://mspc.com/hires/) (`docs/hires/`, static, no build step, served by the existing GitHub Pages setup). Seed roles drawn from the cast (Pam writes docs, Dwight enforces QA, Jim reviews PRs, Creed audits security, Angela audits the office's own token spend, Stanley does the migrations nobody wants), each with a Claude Code / Antigravity / Codex provider toggle (per-provider variants generated from one base manifest), function filters matching the landing page, and a client-side validator identical to the app's alongside a JSON schema (`docs/hires/spec/`). Model suggestions are data-driven (`docs/hires/models.json`), so new models are a one-line update.
 
 ### Security
@@ -964,7 +964,7 @@ fullscreen polish.
 - **Multi-window "floors" (now on by default).** Open isolated office windows, each with its own set of agents and per-PTY routing.
 - **Rich message composer — file & image attachments.** Attach files/images (via a "files" button or paste-to-attach), shown as removable chips above a taller, resizable input; you can send with attachments alone.
 - **Restore agent sessions across restart, with Restart & Continue (#78).** Agents reattach their prior Claude conversation after an app restart: Michael resumes his session (the orientation prompt is skipped on a genuine resume), and a restored worker re-enters its *existing* worktree instead of re-isolating, so uncommitted work isn't lost. The recorded session transcript is seeded into the target cwd before `--resume` attaches (and `--resume` is only used when the transcript is actually present, so there are no broken resumes against a missing id), and the pooled terminal soft-resets in place — staying live and typeable across a model change or respawn, redrawn at its real fit-derived grid. A per-agent **Restart & Continue** button respawns the session on the same model with resume to redraw a garbled terminal, and Add Agent gains a "resume session" field that reattaches by session id (auto-filling the folder, falling back to a fresh session if the id isn't found).
-- **Drag a file onto a terminal to inject its path (#79).** Dropping a file (an image, etc.) onto an agent's terminal now writes its absolute, shell-escaped path into the session — so Claude Code detects the image path in the prompt and attaches it — instead of Electron navigating to the dropped `file://` URL. Backed by `webUtils.getPathForFile` exposed from preload (Electron 32 removed `File.path`); only file drags are intercepted, so text/selection drags still fall through to xterm.
+- **Drag a file onto a terminal to inject its path (#79).** Dropping a file (an image, etc.) onto an agent's terminal now writes its absolute, shell-escaped path into the session — so Claude Code detects the image path in the prompt and attaches it — instead of Node navigating to the dropped `file://` URL. Backed by `webUtils.getPathForFile` exposed from preload (Node 32 removed `File.path`); only file drags are intercepted, so text/selection drags still fall through to xterm.
 - **TV-show office themes — infrastructure (behind a flag, off by default).** A theme abstraction (`ThemeConfig` + registry/loader), a Settings theme picker with a destructive switch-flow, and the first themed map (Brooklyn-99 precinct). Ships dark via the `tvShowOffices` flag while the remaining maps land.
 - **Live GitHub star count** next to the Star buttons on the landing page.
 
@@ -1030,7 +1030,7 @@ handful of resilience fixes land.
 - **Landing + blog refreshed for multi-provider.** The landing page now presents Claude Code, Antigravity (Gemini), and OpenAI Codex as equal first-class providers (with a one-line mobile-friendly badge), and a grand v0.2.4 launch post + technical walkthrough replace the v0.2.3 posts.
 
 ### Fixed
-- **Slack/webhook tunnel no longer crashes at load.** `tunnelmole` is ESM-only; a static `import` in the CommonJS-bundled Electron main process threw `ERR_REQUIRE_ESM`. It's now loaded via a dynamic `import()` inside `openTunnel()`, so the public ingress actually starts.
+- **Slack/webhook tunnel no longer crashes at load.** `tunnelmole` is ESM-only; a static `import` in the CommonJS-bundled Node backend process threw `ERR_REQUIRE_ESM`. It's now loaded via a dynamic `import()` inside `openTunnel()`, so the public ingress actually starts.
 - **Heartbeat re-engages the god on an unread actionable inbox** — not only when the floor is quiet — so worker/human mail is drained promptly.
 - **Slack done-summary stops retrying on terminal errors.** A permanently-failing post (e.g. the bot token missing `chat:write` → `missing_scope`) is now recorded and logged once instead of retrying every 5s and flooding the console; transient errors still retry.
 
@@ -1243,7 +1243,7 @@ Reported / requested by the community: @JLAD75 (Windows hive router / `hooks.soc
 Initial working prototype.
 
 ### Added
-- Electron + React + TypeScript shell (electron-vite).
+- Node + React + TypeScript shell (vite).
 - Real terminals via `node-pty`, rendered with xterm.js; multi-agent spawn/write/
   resize/kill over typed IPC (`window.cth`).
 - Pixi.js office floor: Tiled map, camera, recolored cast, pathfinding, seat assignment,

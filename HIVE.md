@@ -35,7 +35,7 @@ stream, retrieval, reflection, and planning.
 
 1. **Git as the coordination/audit layer, single committer.** Everything the
    hive knows is files in one local git repo. To avoid `.git/index.lock`
-   corruption with many concurrent agents, **only the Electron main process
+   corruption with many concurrent agents, **only the Node backend process
    commits**. Agents never call git — they write plain files. (Research:
    GitHub Desktop's commit-queue pattern; lazygit/git-retry backoff.)
 2. **Single-writer-per-file.** Each agent writes only inside its own

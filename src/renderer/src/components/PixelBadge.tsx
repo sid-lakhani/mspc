@@ -1,5 +1,5 @@
 import { CSSProperties } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 
 export type StatusKind =
   | 'idle' | 'thinking' | 'working' | 'waiting' | 'blocked' | 'success' | 'ghost'
@@ -50,7 +50,7 @@ const labelKeyByStatus: Record<StatusKind, string> = {
 };
 
 export function PixelBadge({ status, label, style }: PixelBadgeProps) {
-  const { t } = useTranslation();
+  
   const key = labelKeyByStatus[status];
   const text = label ?? (key ? t(key) : status);
   return (

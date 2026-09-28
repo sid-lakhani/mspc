@@ -13,7 +13,7 @@ Run a virtual office of autonomous AI coding agents in your browser, orchestrate
 
 MSPC is a **self-hosted** AI agent workspace that turns your server into a multi-agent coding office. Multiple autonomous AI agents work in parallel — each in its own terminal session — coordinated by an orchestrator (Michael), visualized as an animated Pixi.js office floor in your browser.
 
-You access it from any browser. No Electron, no desktop app, no proprietary cloud.
+You access it from any browser. No Node, no desktop app, no proprietary cloud.
 
 **The office metaphor is intentional.** Agents have desks. They leave messages in each other's inboxes. Michael runs standup. The Hive keeps the shared task board. That's not whimsy — it's the coordination protocol.
 

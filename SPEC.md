@@ -7,7 +7,7 @@ A desktop control room for the Claude Code agents you already run in terminals. 
 ## 1. Product shape
 
 ### What it is
-- **Electron desktop app**, macOS-first.
+- **Node desktop app**, macOS-first.
 - Renders a single 2D canvas ("the floor") populated by **avatars**, one per registered Claude Code session.
 - Each avatar represents a real `claude` process running in a tmux pane somewhere on the machine.
 - Avatars **walk around**, visit stations (file shelf, web portal, terminal station, etc.) based on what tool the underlying agent is using.
@@ -27,7 +27,7 @@ This is the load-bearing design decision. Everything else follows from it.
 
 ```
 ┌───────────────────────────────────────────────────────────────┐
-│                     Electron Renderer                          │
+│                     Web Client                          │
 │   ┌──────────────────┐    ┌──────────────────────────────┐    │
 │   │ Avatar Canvas    │    │ Terminal View + Command Bar  │    │
 │   │ (Pixi.js)        │    │ (xterm.js, read-only-ish)   │    │
@@ -63,7 +63,7 @@ This is the load-bearing design decision. Everything else follows from it.
   - `Notification` → avatar waves; toast in the UI
   - `Stop` → avatar idle at desk; badge if there's unread output
   - `SubagentStop` → spawns/despawns child avatar (v2)
-- Each hook runs a tiny shim: `cth-hook` (a Node CLI we ship). It reads the hook's JSON from stdin, tags it with the session id, and POSTs to a Unix domain socket at `~/.cth/events.sock` that the Electron main process owns.
+- Each hook runs a tiny shim: `cth-hook` (a Node CLI we ship). It reads the hook's JSON from stdin, tags it with the session id, and POSTs to a Unix domain socket at `~/.cth/events.sock` that the Node backend process owns.
 
 **Why both planes?** Hooks alone don't give you the raw stream the user expects to see. The tmux pipe alone doesn't tell you which tool is running without fragile output parsing. Together: the canvas is event-driven; the terminal view is byte-for-byte authentic.
 
@@ -186,7 +186,7 @@ Edge cases:
 
 | Layer | Pick | Notes |
 |---|---|---|
-| Shell | Electron | Renderer + Node main |
+| Shell | Node | Renderer + Node main |
 | UI framework | React + TypeScript | |
 | Avatar canvas | **Pixi.js** | Sprite scene, 60fps, easy lerp/tweening. Phaser is overkill. |
 | Terminal view | **xterm.js** | Tails pipe-pane log; supports ANSI properly |
@@ -194,7 +194,7 @@ Edge cases:
 | Event ingest | **Unix domain socket** at `~/.cth/events.sock` | Node `net.createServer`; hook shim is a tiny CLI that writes JSON+newline |
 | Persistence | **SQLite** via better-sqlite3 | Agents, layouts, command history, goals |
 | Sprites | Custom or itch.io asset pack | 8 directions × idle/walk/work animations |
-| Packaging | electron-builder | `.dmg` for Mac, defer Linux/Windows |
+| Packaging | node-builder | `.dmg` for Mac, defer Linux/Windows |
 
 External binaries the user must have: `tmux`. App detects on first run and refuses to start without it (with install instructions).
 
@@ -262,7 +262,7 @@ CREATE TABLE layout (                    -- avatar positions/rooms
 ## 11. Milestones
 
 ### M0 — Skeleton (1–2 days)
-- Electron + React + Pixi shell
+- Node + React + Pixi shell
 - Renders one hardcoded avatar that walks between two fixed positions
 - xterm.js wired to a static log file
 
@@ -302,7 +302,7 @@ CREATE TABLE layout (                    -- avatar positions/rooms
 
 - **Avatar metaphor**: active Sims-like (agents walk, visit stations).
 - **Execution model**: attach to existing terminal sessions (tmux), do not spawn or own the `claude` process.
-- **Tech stack**: Electron + React + Pixi.js + xterm.js + SQLite.
+- **Tech stack**: Node + React + Pixi.js + xterm.js + SQLite.
 - **MVP scope**: N independent agents in a shared workspace; no inter-agent coordination.
 
 ## 13. Decisions still needed from you

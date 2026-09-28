@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import type { TFunction } from 'i18next';
+import { t } from '@/t';
+import type { TFunction } from '@/t';
 import { CommitGraph } from './git/CommitGraph';
 import { PixelButton } from './PixelButton';
 import { Icon } from './Icon';
@@ -41,7 +41,7 @@ function statusColor(code: string): string {
 }
 
 export function GitTab({ cwd }: GitTabProps) {
-  const { t } = useTranslation();
+  
   const [isRepo, setIsRepo] = useState<boolean | null>(null);
   const [branch, setBranch] = useState<string | null>(null);
   const [detached, setDetached] = useState(false);
@@ -222,7 +222,7 @@ function StatusGroup({ label, entries }: {
   label: string;
   entries: Array<{ path: string; code: string }>;
 }) {
-  const { t } = useTranslation();
+  
   if (entries.length === 0) return null;
   return (
     <div style={{ padding: '4px 0' }}>

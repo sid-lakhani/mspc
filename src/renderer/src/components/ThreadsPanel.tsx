@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import { PixelPanel } from './PixelPanel';
 import { PixelButton } from './PixelButton';
 import { useRtl } from '@/i18n/useDirection';
@@ -48,7 +48,7 @@ function groupThreads(msgs: HiveMessage[], noSubject: string): Thread[] {
 }
 
 export function ThreadsPanel({ agentId }: ThreadsPanelProps) {
-  const { t } = useTranslation();
+  
   const rtl = useRtl();
   const [messages, setMessages] = useState<HiveMessage[]>([]);
   const [openThreads, setOpenThreads] = useState<Record<string, boolean>>({});

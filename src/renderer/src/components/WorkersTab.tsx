@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import { PixelButton } from './PixelButton';
 import { useStore } from '@/store/store';
 
@@ -49,7 +49,7 @@ const sectionHead: React.CSSProperties = {
 };
 
 function StatusBadge({ w }: { w: WorkerSnapshot }) {
-  const { t } = useTranslation();
+  
   const releasing = w.status === 'releasing';
   return (
     <span style={{
@@ -65,7 +65,7 @@ function StatusBadge({ w }: { w: WorkerSnapshot }) {
 }
 
 export function WorkersTab() {
-  const { t } = useTranslation();
+  
   const godName = useStore((s) => s.agents.find((a) => a.isGod)?.name) ?? 'the orchestrator';
   const [data, setData] = useState<WorkersData | null>(null);
   const [stopping, setStopping] = useState<Record<string, boolean>>({});

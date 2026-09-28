@@ -1,6 +1,6 @@
 import { ClipboardEvent, DragEvent, KeyboardEvent, type MouseEvent as ReactMouseEvent, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import { PixelButton } from './PixelButton';
 import { Icon } from './Icon';
 import { useStore, type Agent, type QueuedMessage } from '@/store/store';
@@ -31,7 +31,7 @@ export interface MessageQueueComposerProps {
  * TUI one-by-one as soon as it goes idle (see useHive's flush loop).
  */
 export function MessageQueueComposer({ agent }: MessageQueueComposerProps) {
-  const { t } = useTranslation();
+  
   const rtl = useRtl();
   const queue = useStore((s) => s.messageQueues[agent.id]) ?? EMPTY_QUEUE;
   const enqueueMessage = useStore((s) => s.enqueueMessage);
@@ -449,7 +449,7 @@ function QueuedMessageRow(
     onRemove: () => void;
   }
 ) {
-  const { t } = useTranslation();
+  
   const rtl = useRtl();
   const [expanded, setExpanded] = useState(false);
   const [clipped, setClipped] = useState(false);
@@ -562,7 +562,7 @@ function QueuedMessageRow(
  * guarantee). `hasGroqKey` is boolean presence only; the key value never gets here.
  */
 function FreeFlowButton({ agentId, hasGroqKey }: { agentId: string; hasGroqKey: boolean }) {
-  const { t } = useTranslation();
+  
   const ff = useFreeflow();
   const mine = ff.targetAgentId === agentId;
   const recording = ff.status === 'recording' && mine;

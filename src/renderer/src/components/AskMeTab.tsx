@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t as translate } from '@/t';
 import { PixelButton } from './PixelButton';
 import { PixelBadge } from './PixelBadge';
 import { useStore } from '@/store/store';
@@ -45,7 +45,7 @@ function dependentsTree(id: string, all: HiveTask[], seen = new Set<string>()): 
 }
 
 export function AskMeTab() {
-  const { t: translate } = useTranslation();
+  
   const rtl = useRtl();
   const agents = useStore((s) => s.agents);
   const restorable = useStore((s) => s.restorableAgents);

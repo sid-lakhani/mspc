@@ -1,7 +1,7 @@
 # MSPC — Landing Site Design System
 
 > Source of truth for `docs/index.html` (the marketing site at **mspc.com**).
-> This is **not** the app design system — see the root `DESIGN.md` for the Electron app.
+> This is **not** the app design system — see the root `DESIGN.md` for the Node app.
 >
 > **Direction:** light, warm-paper, monospace, lightly **neo-brutalist** — in the lineage of
 > [cubicle.run](https://cubicle.run): a cream/white canvas, near-black ink, square corners,

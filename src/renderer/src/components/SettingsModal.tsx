@@ -1,5 +1,6 @@
+import { i18n } from '@/t';
 import { useState, useEffect, type CSSProperties } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@/t';
 import { agentModels, type HarnessConfig } from '@/store/config';
 import { useStore } from '@/store/store';
 import {
@@ -194,7 +195,7 @@ const NAV_SECTION_KEYS: Record<Section, string> = {
 };
 
 export function SettingsModal({ config, onClose, initialSection }: SettingsModalProps) {
-  const { t, i18n } = useTranslation();
+  
   const godName = useStore((s) => s.agents.find((a) => a.isGod)?.name) ?? 'the orchestrator';
   const [confirming, setConfirming] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -274,7 +275,7 @@ export function SettingsModal({ config, onClose, initialSection }: SettingsModal
   useEffect(() => {
     setArabicTerminal(isArabicTerminalEnabled());
     setArabicFollowsLanguage(isArabicTerminalFollowingLanguage());
-  }, [i18n.language]);
+  }, [i18n?.language]);
   const toggleSimpleMode = async () => {
     const next = !simpleMode;
     setSimpleMode(next);
@@ -1082,13 +1083,13 @@ export function SettingsModal({ config, onClose, initialSection }: SettingsModal
                             </span>
                           </div>
                           <select
-                            value={i18n.language}
+                            value={i18n?.language}
                             onChange={(e) => setLanguage(e.target.value)}
                             style={slackInputStyle}
                             aria-label={t('settings.general.language')}
                           >
                             {LANGUAGES.map((l) => (
-                              <option key={l.code} value={l.code}>{l.label}</option>
+                              <option key={l.id} value={l.id}>{l.name}</option>
                             ))}
                           </select>
                         </div>
